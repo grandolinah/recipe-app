@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { arrowForwardOutline } from 'ionicons/icons';
 
 import Button from '../components/Button';
+import Toolbar from '../components/Toolbar';
 
 import './Login.scss';
 
@@ -53,9 +54,7 @@ const Login: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
-          <IonTitle class="ion-text-center">Login</IonTitle>
-        </IonToolbar>
+        <Toolbar name="Login" />
       </IonHeader>
       <IonContent className="ion-padding home-page">
         <IonGrid className="home-page__grid">
