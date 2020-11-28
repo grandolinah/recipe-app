@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 
 import { arrowForwardOutline } from 'ionicons/icons';
 
+import Button from '../components/Button';
+
 import './Login.scss';
 
 const Login: React.FC = () => {
@@ -74,11 +76,7 @@ const Login: React.FC = () => {
             </IonCol>
           </IonRow>
           <IonRow className="ion-justify-content-center ion-margin-top">
-            <IonButton onClick={onClickLoginHandler}>
-              Login
-              <IonIcon icon={arrowForwardOutline}></IonIcon>
-            </IonButton>
-
+            <Button onClickHandler={onClickLoginHandler} name="Login" icon={arrowForwardOutline}/>
           </IonRow>
           <IonRow className="ion-justify-content-center ion-margin-top">
             <IonButton onClick={onClickGToRegisterHandler} color="dark" fill="clear" size="small">Dont have account?</IonButton>
@@ -113,10 +111,7 @@ const Login: React.FC = () => {
               </IonCol>
             </IonRow>
             <IonRow className="ion-justify-content-center ion-margin-top">
-              <IonButton onClick={onClickRegisterHandler}>
-                Register
-                <IonIcon icon={arrowForwardOutline}></IonIcon>
-              </IonButton>
+              <Button onClickHandler={onClickRegisterHandler} name="Register" icon={arrowForwardOutline}/>
             </IonRow>
           </IonGrid>
         </IonContent>
