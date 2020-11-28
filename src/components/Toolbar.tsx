@@ -1,11 +1,9 @@
 import { IonToolbar, IonTitle } from '@ionic/react';
 import React from 'react';
 
-import './Toolbar.scss';
+import {ToolbarPropsInterface} from '../interfaces/toolbar-props.interface';
 
-export interface ToolbarPropsInterface {
-  name: string;
-}
+import './Toolbar.scss';
 
 const Toolbar = ({ name }: ToolbarPropsInterface) => {
   return (
