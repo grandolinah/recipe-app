@@ -230,3 +230,25 @@ http://ionicframework.com/docs/theming/ */
     --ion-card-background: #1e1e1e;
   }
 }
+
+// Adding font
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/assets/fonts/Montserrat-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/assets/fonts/Montserrat-Bold.ttf');
+}
+
+:root,
+:root[mode="md"],
+:root[mode="ios"] {
+  --ion-font-family: "Montserrat", sans-serif;;
+  font-family: var(--ion-font-family) !important;
+}
