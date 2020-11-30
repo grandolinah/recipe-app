@@ -1,0 +1,17 @@
+.loading-page {
+  &__grid {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &__title {
+    margin-bottom: 16px;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  &__spinner {
+    align-self: center;
+  }
+}
