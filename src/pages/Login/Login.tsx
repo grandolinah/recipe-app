@@ -2,7 +2,7 @@ import { IonContent, IonHeader, IonPage, IonGrid, IonCol, IonItem, IonLabel, Ion
 import React, { useState, useRef, useContext } from 'react';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { RouteComponentProps } from 'react-router-dom';
-import { auth } from '../../services/firebase-service';
+import { createUserWithEmailAndPassword, signInWithEmailAndPasswordHandler } from '../../services/firebase-service';
 import { UserContext } from "../../UserContext";
 
 import urls from "../../config/urls";
@@ -60,7 +60,7 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
 
     if (email !== '' && password !== '' && regex.test(`${email}`)) {
       // auth
-      await signInWithEmailAndPasswordHandler(email, password);
+      signInWithEmailAndPasswordHandler(email, password);
 
       if (user.firstName) {
         history.push(urls.APP_HOME);
@@ -75,18 +75,6 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
       emailInputRef.current!.value = '';
       passwordInputRef.current!.value = '';
     }
-  };
-
-  const signInWithEmailAndPasswordHandler = (email: any, password: any) => {
-    auth.signInWithEmailAndPassword(email, password).catch(error => {
-      console.error("Error signing in with password and email", error);
-    });
-  };
-
-  const createUserWithEmailAndPassword = (email: any, password: any) => {
-    auth.createUserWithEmailAndPassword(email, password).catch(error => {
-      console.error("Error signing in with password and email", error);
-    });
   };
 
   const onClickGToRegisterHandler = () => {

@@ -14,6 +14,7 @@ import urls from "./config/urls";
 import Loading from './pages/Loading/Loading';
 import Login from './pages/Login/Login';
 import Onboarding from './pages/Onbording/Onboarding';
+import Tab from './Tab';
 
 import './styles/App.scss';
 
@@ -72,7 +73,6 @@ const App: React.FC = () => {
               <IonRouterOutlet>
                 <Route path={urls.LOGIN} component={Login} exact={true} />
                 <ProtectedRoute path={urls.ONBOARDING} component={Onboarding} isAuth={isAuth} />
-                <ProtectedRoute path="/app" component={Onboarding} isAuth={isAuth} />
                 <Route exact path="/" render={() => {
                   if (isAuth) {
                     return <Redirect to={urls.ONBOARDING} />
@@ -81,6 +81,7 @@ const App: React.FC = () => {
                   }
                 }} />
               </IonRouterOutlet>
+              <ProtectedRoute path="/app" component={Tab} isAuth={isAuth} />
             </IonReactRouter>
           )}
       </IonApp>
