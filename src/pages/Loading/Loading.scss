@@ -1,4 +1,11 @@
+:root {
+  --charcoal: #FFF4F3;
+}
+
 .loading-page {
+  &__container {
+    --background: var(--charcoal, #216999);
+  }
   &__grid {
     position: relative;
     top: 50%;

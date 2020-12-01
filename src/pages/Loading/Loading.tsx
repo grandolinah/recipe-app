@@ -6,7 +6,7 @@ import './Loading.scss';
 const Loading: React.FC = () => {
   return (
     <IonPage className="loading-page">
-      <IonContent>
+      <IonContent className="loading-page__container">
         <IonGrid className="loading-page__grid">
           <IonRow>
             <IonTitle className="loading-page__title">Loading</IonTitle>

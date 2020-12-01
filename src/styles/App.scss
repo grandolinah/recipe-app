@@ -1,0 +1,19 @@
+@import "./config/config";
+@import "./fonts/fonts";
+@import "./utilities/grid";
+@import './config/variables';
+
+// Global app styles;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: $primaryFont;
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+.app {
+  color: $textColor;
+}

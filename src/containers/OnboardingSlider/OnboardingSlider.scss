@@ -1,0 +1,17 @@
+.slider {
+  &__slide {
+    align-items: stretch;
+  }
+
+  &__input {
+    height: 80%;
+  }
+
+  &__button {
+    height: 20%;
+  }
+}
+
+ion-slides {
+  height: 90%;
+}

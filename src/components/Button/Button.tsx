@@ -3,9 +3,13 @@ import React from 'react';
 
 import './Button.scss';
 
-import { ButtonPropsInterface } from '../interfaces/button-props-interface';
+export type ButtonProps = {
+  name: string;
+  onClickHandler(): void;
+  icon?: string;
+}
 
-const Button = ({ onClickHandler, name, icon }: ButtonPropsInterface) => {
+const Button = ({ onClickHandler, name, icon }: ButtonProps) => {
   return (
     <IonButton onClick={onClickHandler} className="button" shape="round">
       {name}

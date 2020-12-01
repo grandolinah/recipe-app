@@ -1,11 +1,13 @@
 import { IonToolbar, IonTitle } from '@ionic/react';
 import React from 'react';
 
-import {ToolbarPropsInterface} from '../interfaces/toolbar-props.interface';
+import './Header.scss';
 
-import './Toolbar.scss';
+export type HeaderProps  = {
+  name: string;
+}
 
-const Toolbar = ({ name }: ToolbarPropsInterface) => {
+const Header = ({ name }: HeaderProps) => {
   return (
     <IonToolbar className="toolbar">
       <IonTitle className="ion-text-center toolbar__title">{name}</IonTitle>
@@ -13,4 +15,4 @@ const Toolbar = ({ name }: ToolbarPropsInterface) => {
   );
 };
 
-export default Toolbar;
+export default Header;

@@ -221,21 +221,6 @@ http://ionicframework.com/docs/theming/ */
   }
 }
 
-// Adding font
-@font-face {
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 400;
-  src: url('/assets/fonts/Montserrat-Regular.ttf');
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 700;
-  src: url('/assets/fonts/Montserrat-Bold.ttf');
-}
-
 :root,
 :root[mode='md'],
 :root[mode='ios'] {
