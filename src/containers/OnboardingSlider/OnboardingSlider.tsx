@@ -1,15 +1,24 @@
 import React, { useRef, useContext, useState } from 'react';
 import { IonSlides, IonSlide, IonContent, IonGrid, IonCol, IonRow, IonInput, IonItem, IonLabel, IonTitle, IonSelect, IonSelectOption, IonAvatar } from '@ionic/react';
-import { UserContext } from "../../UserContext";
+import { useHistory } from 'react-router-dom';
+import { useCamera } from '@ionic/react-hooks/camera';
+import { useFilesystem, base64FromPath } from '@ionic/react-hooks/filesystem';
+import { useStorage } from '@ionic/react-hooks/storage';
+import { isPlatform } from '@ionic/react';
+import { CameraResultType, CameraSource, CameraPhoto, Capacitor, FilesystemDirectory } from "@capacitor/core";
+
+import { UserContext } from '../../UserContext';
+
 import Button from '../../components/Button/Button';
-import { updateUserDocument } from '../../services/firebase-service';
+
+import { updateUserDocument, uploadImage } from '../../services/firebase-service';
+
 import './OnboardingSlider.scss';
 
-// import CUISINES from '../config/cuisine';
+import urls from '../../config/urls';
+
 let swiper: any;
 
-// Optional parameters to pass to the swiper instance.
-// See http://idangero.us/swiper/api/ for valid options.
 const slideOpts = {
   initialSlide: 0,
   speed: 400,
@@ -22,15 +31,26 @@ const slideOpts = {
   }
 };
 
-const OnboardingSlider: React.FC = () => {
+export interface Photo {
+  filepath: string;
+  webviewPath?: string;
+}
+
+const OnboardingSlider = () => {
   const firstNameInputRef = useRef<HTMLIonInputElement>(null);
   const secondNameInputRef = useRef<HTMLIonInputElement>(null);
-  const [selectedCuisines, setSelectedCuisines] = useState([]);
-  const [photoUrl, setPhotoUrl] = useState('https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y')
-  const user = useContext(UserContext);
 
-  console.log(user);
-  console.log(selectedCuisines);
+  const history = useHistory();
+
+  const { getPhoto } = useCamera();
+  const { deleteFile, getUri, readFile, writeFile } = useFilesystem();
+
+  const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
+  const [photoUrl, setPhotoUrl] = useState('https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y');
+
+  const [photo, setPhoto] = useState<Photo>();
+
+  const user = useContext(UserContext);
 
   const onClickFirstNameHandler = async () => {
     const firstName = firstNameInputRef.current ? firstNameInputRef.current?.value : null;
@@ -60,21 +80,32 @@ const OnboardingSlider: React.FC = () => {
     }
   }
 
-  // const cuisineSelectOptions = () => {
-  //   const selectOptions = CUISINES.map((item: string) => {
-  //     return (
-  //       <IonSelectOption value={item}>{item.charAt(0).toUpperCase() + item.slice(1)}</IonSelectOption>
-  //     );
-  //   });
+  const onClickUploadPhotoHandler = async () => {
+    const cameraPhoto = await getPhoto({
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Camera,
+      quality: 100
+    });
 
-  //   return (
-  //     <IonSelect multiple={true} cancelText="Cancel" okText="Confirm" onIonChange={(e) => console.log(e)}>{selectOptions}</IonSelect>
-  //   )
-  // }
+    const fileName = new Date().getTime() + '.jpeg';
 
-  const onClickUploadPhotoHandler = () => {};
+    const newPhoto = {
+      filepath: fileName,
+      webviewPath: cameraPhoto.webPath
+    };
 
-  const onClickPhotoHandler = () => {};
+    setPhoto(newPhoto);
+
+    const base64Data = await base64FromPath(newPhoto.webviewPath!);
+
+    // const savedFile = await writeFile({
+    //   path: fileName,
+    //   data: base64Data,
+    //   directory: FilesystemDirectory.Data
+    // });
+
+    uploadImage(base64Data , user.uid);
+  };
 
   return (
     <IonContent>
@@ -147,7 +178,6 @@ const OnboardingSlider: React.FC = () => {
             </IonRow>
           </IonGrid>
         </IonSlide>
-
         <IonSlide className="slider__slide">
           <IonGrid>
             <IonRow className="slider__description">
@@ -157,24 +187,22 @@ const OnboardingSlider: React.FC = () => {
             </IonRow>
             <IonRow className="slider__input">
               <IonCol>
-                <IonAvatar>
+                <IonAvatar className="slider__avatar">
                   <img src={photoUrl} alt="user" />
                 </IonAvatar>
-              </IonCol>
-              <IonCol>
-                <Button name="upload" onClickHandler={onClickUploadPhotoHandler} />
+                <Button name="choose photo" onClickHandler={onClickUploadPhotoHandler} />
               </IonCol>
             </IonRow>
             <IonRow className="slider__button">
               <IonCol>
-                <Button name="continue" onClickHandler={onClickPhotoHandler} />
+                <Button name="continue" onClickHandler={() => history.push(urls.APP_HOME)} />
               </IonCol>
             </IonRow>
           </IonGrid>
         </IonSlide>
       </IonSlides>
     </IonContent>
-  )
-}
+  );
+};
 
 export default OnboardingSlider;

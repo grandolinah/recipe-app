@@ -1,6 +1,4 @@
-import React, { useEffect, useContext } from "react";
-
-// import { UserContext } from "../context/UserContext";
+import React, { useEffect } from "react";
 
 import { Route, Redirect } from "react-router";
 
@@ -11,10 +9,6 @@ export type ProtectedRouteProps = {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ component: Component, path, isAuth }) => {
-  // const user = useContext(UserContext);
-  // // const isAuth = user.uid;
-
-  // console.log(isAuth);
   useEffect(() => {
     console.log(`loading protected route '${path}' with component ${Component?.name}`);
   }, [Component, path, isAuth]);

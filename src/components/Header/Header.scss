@@ -1,4 +1,4 @@
-@import '../../styles/config/config';
+@import '../../styles/config/variables';
 
 .toolbar {
   --background: rgb(131, 58, 180);
@@ -16,7 +16,7 @@
   );
   --background: linear-gradient(90deg, rgba(131, 58, 180, 1) 0%, rgba(253, 29, 29, 1) 19%, rgba(252, 176, 69, 1) 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#833ab4",endColorstr="#fcb045",GradientType=1);
-  color: #fff;
+  color: $white;
 
   &__title {
     font-weight: 700;

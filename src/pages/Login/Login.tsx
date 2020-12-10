@@ -9,7 +9,6 @@ import urls from "../../config/urls";
 
 import Button from '../../components/Button/Button';
 import Header from '../../components/Header/Header';
-import InputItem from '../../components/Input/Input';
 
 import './Login.scss';
 
@@ -67,9 +66,6 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
       } else {
         history.push(urls.ONBOARDING);
       }
-
-      // web
-      sessionStorage.setItem('isLogged', 'true');
 
       // clean input
       emailInputRef.current!.value = '';
