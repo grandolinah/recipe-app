@@ -17,6 +17,13 @@ import './OnboardingSlider.scss';
 
 import urls from '../../config/urls';
 
+const PHOTO_STORAGE = 'photos';
+
+export interface Photo {
+  filepath: string;
+  webviewPath?: string;
+}
+
 let swiper: any;
 
 const slideOpts = {
@@ -31,7 +38,7 @@ const slideOpts = {
   }
 };
 
-export interface Photo {
+export interface PhotoInterface {
   filepath: string;
   webviewPath?: string;
 }
@@ -41,14 +48,15 @@ const OnboardingSlider = () => {
   const secondNameInputRef = useRef<HTMLIonInputElement>(null);
 
   const history = useHistory();
-
+  const { set } = useStorage();
   const { getPhoto } = useCamera();
-  const { deleteFile, getUri, readFile, writeFile } = useFilesystem();
+  const { readFile, writeFile } = useFilesystem();
 
   const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
-  const [photoUrl, setPhotoUrl] = useState('https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y');
 
-  const [photo, setPhoto] = useState<Photo>();
+  const [photoUrl, setPhotoUrl] = useState<any>('https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y');
+
+  const [photos, setPhotos] = useState<any[]>([]);
 
   const user = useContext(UserContext);
 
@@ -80,6 +88,42 @@ const OnboardingSlider = () => {
     }
   }
 
+  const savePicture = async (photo: CameraPhoto, fileName: string): Promise<PhotoInterface> => {
+    let base64Data: string;
+
+    // "hybrid" will detect Cordova or Capacitor;
+    if (isPlatform('hybrid')) {
+      const file = await readFile({
+        path: photo.path!
+      });
+      base64Data = file.data;
+    } else {
+      base64Data = await base64FromPath(photo.webPath!);
+    }
+    const savedFile = await writeFile({
+      path: fileName,
+      data: base64Data,
+      directory: FilesystemDirectory.Data
+    });
+  
+    if (isPlatform('hybrid')) {
+      // Display the new image by rewriting the 'file://' path to HTTP
+      // Details: https://ionicframework.com/docs/building/webview#file-protocol
+      return {
+        filepath: savedFile.uri,
+        webviewPath: Capacitor.convertFileSrc(savedFile.uri),
+      };
+    }
+    else {
+      // Use webPath to display the new image instead of base64 since it's
+      // already loaded into memory
+      return {
+        filepath: fileName,
+        webviewPath: photo.webPath
+      };
+    }
+  };
+
   const onClickUploadPhotoHandler = async () => {
     const cameraPhoto = await getPhoto({
       resultType: CameraResultType.Uri,
@@ -89,22 +133,26 @@ const OnboardingSlider = () => {
 
     const fileName = new Date().getTime() + '.jpeg';
 
+    const savedFileImage = await savePicture(cameraPhoto, fileName);
+
     const newPhoto = {
       filepath: fileName,
       webviewPath: cameraPhoto.webPath
     };
 
-    setPhoto(newPhoto);
+    const newPhotos = [savedFileImage, ...photos];
+
+    setPhotos(newPhotos);
 
     const base64Data = await base64FromPath(newPhoto.webviewPath!);
 
-    const savedFile = await writeFile({
-      path: fileName,
-      data: base64Data,
-      directory: FilesystemDirectory.Data
-    });
+    set(PHOTO_STORAGE, JSON.stringify(newPhotos));
 
-    uploadImage(base64Data , user.uid);
+    await uploadImage(base64Data , user.uid);
+
+    // TODO update user url in db
+    // TODO set url not base64data
+    setPhotoUrl(base64Data);
   };
 
   return (
