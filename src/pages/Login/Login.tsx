@@ -1,18 +1,15 @@
 import { IonContent, IonHeader, IonPage, IonGrid, IonCol, IonItem, IonLabel, IonInput, IonRow, IonButton, IonModal } from '@ionic/react';
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef } from 'react';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { RouteComponentProps } from 'react-router-dom';
 import { createUserWithEmailAndPassword, signInWithEmailAndPasswordHandler } from '../../services/firebase-service';
-import { UserContext } from "../../UserContext";
-
-import urls from "../../config/urls";
 
 import Button from '../../components/Button/Button';
 import Header from '../../components/Header/Header';
 
 import './Login.scss';
 
-const Login: React.FC<RouteComponentProps> = ({ history }) => {
+const Login: React.FC<RouteComponentProps> = () => {
   let emailInputRef = useRef<HTMLIonInputElement>(null);
   let passwordInputRef = useRef<HTMLIonInputElement>(null);
   let confirmPasswordInputRef = useRef<HTMLIonInputElement>(null);
@@ -28,8 +25,7 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
   const [confirmPasswordLabel, setConfirmPasswordLabel] = useState<string>('confirm Password');
   const [confirmPasswordLabelColor, setConfirmPasswordLabelColor] = useState<string>('primary');
 
-  const user = useContext(UserContext);
-
+  console.log(emailInputRef.current?.value, passwordInputRef.current?.value, confirmPasswordInputRef.current?.value)
   const onClickLoginHandler = async () => {
     const email = emailInputRef.current ? emailInputRef.current?.value : null;
     const password = passwordInputRef.current ? passwordInputRef.current?.value : null;
@@ -61,12 +57,6 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
       // auth
       signInWithEmailAndPasswordHandler(email, password);
 
-      if (user.firstName) {
-        history.push(urls.APP_HOME);
-      } else {
-        history.push(urls.ONBOARDING);
-      }
-
       // clean input
       emailInputRef.current!.value = '';
       passwordInputRef.current!.value = '';
@@ -75,9 +65,6 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
 
   const onClickGToRegisterHandler = () => {
     // reset all
-    emailInputRef.current!.value = '';
-    passwordInputRef.current!.value = '';
-
     setIsModalVisible(!isModalVisible);
   };
 

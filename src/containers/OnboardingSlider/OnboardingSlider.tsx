@@ -22,7 +22,7 @@ let swiper: any;
 const slideOpts = {
   initialSlide: 0,
   speed: 400,
-  // allowTouchMove: false,
+  allowTouchMove: false,
   pagination: false,
   on: {
     beforeInit() {
@@ -98,11 +98,11 @@ const OnboardingSlider = () => {
 
     const base64Data = await base64FromPath(newPhoto.webviewPath!);
 
-    // const savedFile = await writeFile({
-    //   path: fileName,
-    //   data: base64Data,
-    //   directory: FilesystemDirectory.Data
-    // });
+    const savedFile = await writeFile({
+      path: fileName,
+      data: base64Data,
+      directory: FilesystemDirectory.Data
+    });
 
     uploadImage(base64Data , user.uid);
   };
@@ -195,7 +195,7 @@ const OnboardingSlider = () => {
             </IonRow>
             <IonRow className="slider__button">
               <IonCol>
-                <Button name="continue" onClickHandler={() => history.push(urls.APP_HOME)} />
+                <Button name="continue" onClickHandler={() => history.push(urls.APP)} />
               </IonCol>
             </IonRow>
           </IonGrid>

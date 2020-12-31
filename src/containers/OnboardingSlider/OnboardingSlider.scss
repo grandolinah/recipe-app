@@ -3,8 +3,15 @@
     align-items: stretch;
   }
 
+  &__description {
+    margin-bottom: 20px;
+  }
+
   &__input {
     height: 80%;
+    width: 300px;
+    max-width: 90%;
+    margin: auto;
   }
 
   &__button {

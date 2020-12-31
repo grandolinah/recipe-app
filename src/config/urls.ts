@@ -1,5 +1,5 @@
 const URLS = {
-  APP_HOME: '/app',
+  APP: '/app',
   ONBOARDING: '/onboarding',
   LOGIN: '/login',
 };
