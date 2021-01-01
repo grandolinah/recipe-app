@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, IonAlert } from '@ionic/react';
+import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
 import { auth, generateUserDocument, getUserDocument } from "./services/firebase-service";
@@ -50,7 +50,6 @@ const App: React.FC = () => {
   const [isAuth, setIsAuth] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isOnboarded, setIsOnboarded] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
 
   console.log(user);
   console.log(isAuth);
@@ -61,7 +60,6 @@ const App: React.FC = () => {
       if (user?.uid) {
         setIsAuth(true);
         setUser(user);
-        setShowAlert(true);
 
         const userDocument = await getUserDocument(user?.uid);
 
@@ -83,15 +81,6 @@ const App: React.FC = () => {
   return (
     <UserContext.Provider value={user}>
       <IonApp>
-        <IonAlert
-            isOpen={showAlert}
-            onDidDismiss={() => setShowAlert(false)}
-            cssClass='my-custom-class'
-            header={'Alert'}
-            subHeader={'Subtitle'}
-            message={`This is an alert message.${user?.uid} , ${isAuth}`}
-            buttons={['OK']}
-          />
         {!isLoaded ? (
           <Loading />
         ) : (
@@ -99,15 +88,15 @@ const App: React.FC = () => {
               {isAuth ? (
                 <IonRouterOutlet>
                   <ProtectedRoute path={urls.ONBOARDING} component={Onboarding} isAuth={isAuth} />
-                  <ProtectedRoute path="/app" component={Tab} isAuth={isAuth} />
+                  <ProtectedRoute path={urls.APP} component={Tab} isAuth={isAuth} />
                   <Route exact path="/" render={() => {
                     if (isAuth && !isOnboarded) {
                       return <Redirect to={urls.ONBOARDING} />
-                    } else if (isAuth && isOnboarded){
+                    } else if (isAuth && isOnboarded) {
                       return <Redirect to={urls.APP} />
                     }
                   }} />
-                  <Route exact path="/login" render={() => {
+                  <Route exact path={urls.LOGIN} render={() => {
                     if (!isOnboarded) {
                       return <Redirect to={urls.ONBOARDING} />
                     } else {
@@ -116,13 +105,13 @@ const App: React.FC = () => {
                   }} />
                 </IonRouterOutlet>
               ) : (
-                <IonRouterOutlet>
-                  <Route path={urls.LOGIN} component={Login} exact={true} />
-                  <Route exact path="/" render={() => {
-                    return <Redirect to={urls.LOGIN} />
-                  }} />
-                </IonRouterOutlet>
-              )}
+                  <IonRouterOutlet>
+                    <Route path={urls.LOGIN} component={Login} exact={true} />
+                    <Route exact path="/" render={() => {
+                      return <Redirect to={urls.LOGIN} />
+                    }} />
+                  </IonRouterOutlet>
+                )}
             </IonReactRouter>
           )}
       </IonApp>
