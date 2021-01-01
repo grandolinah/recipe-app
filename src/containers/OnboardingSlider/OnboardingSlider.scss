@@ -21,6 +21,10 @@
   &__avatar {
     margin: 20px auto;
   }
+
+  &__image {
+    height: 100% !important;
+  }
 }
 
 ion-slides {
