@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useState } from 'react';
+import React, { useRef, useContext, useState, useEffect } from 'react';
 import { IonSlides, IonSlide, IonContent, IonGrid, IonCol, IonRow, IonInput, IonItem, IonLabel, IonTitle, IonSelect, IonSelectOption, IonAvatar } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { useCamera } from '@ionic/react-hooks/camera';
@@ -29,7 +29,7 @@ let swiper: any;
 const slideOpts = {
   initialSlide: 0,
   speed: 400,
-  allowTouchMove: false,
+  allowTouchMove: true,
   pagination: false,
   on: {
     beforeInit() {
@@ -46,19 +46,15 @@ export interface PhotoInterface {
 const OnboardingSlider = () => {
   const firstNameInputRef = useRef<HTMLIonInputElement>(null);
   const secondNameInputRef = useRef<HTMLIonInputElement>(null);
-
   const history = useHistory();
   const { set } = useStorage();
   const { getPhoto } = useCamera();
   const { readFile, writeFile } = useFilesystem();
-
   const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
-
-  const [photoUrl, setPhotoUrl] = useState<any>('https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y');
-
   const [photos, setPhotos] = useState<any[]>([]);
-
   const user = useContext(UserContext);
+  const [photoUrl, setPhotoUrl] = useState<any>(user?.photoURL ? user.photoURL 
+    : 'https://firebasestorage.googleapis.com/v0/b/ionic-recipes-6daa6.appspot.com/o/users%2Fdefault-user-image.png?alt=media&token=7963c406-089f-444e-9262-f22b1524fe45');
 
   const onClickFirstNameHandler = async () => {
     const firstName = firstNameInputRef.current ? firstNameInputRef.current?.value : null;
@@ -105,7 +101,7 @@ const OnboardingSlider = () => {
       data: base64Data,
       directory: FilesystemDirectory.Data
     });
-  
+
     if (isPlatform('hybrid')) {
       // Display the new image by rewriting the 'file://' path to HTTP
       // Details: https://ionicframework.com/docs/building/webview#file-protocol
@@ -113,8 +109,7 @@ const OnboardingSlider = () => {
         filepath: savedFile.uri,
         webviewPath: Capacitor.convertFileSrc(savedFile.uri),
       };
-    }
-    else {
+    } else {
       // Use webPath to display the new image instead of base64 since it's
       // already loaded into memory
       return {
@@ -148,12 +143,18 @@ const OnboardingSlider = () => {
 
     set(PHOTO_STORAGE, JSON.stringify(newPhotos));
 
-    await uploadImage(base64Data , user.uid);
-
-    // TODO update user url in db
-    // TODO set url not base64data
-    setPhotoUrl(base64Data);
+    uploadImage(base64Data, user.uid).then(
+      function(result) { 
+        setPhotoUrl(result);
+      },
+      function(error) { console.log(error) }
+    );
   };
+
+  useEffect(() => {
+
+      updateUserDocument(user, { photoURL: photoUrl });
+  }, [photoUrl, user])
 
   return (
     <IonContent>
@@ -236,7 +237,7 @@ const OnboardingSlider = () => {
             <IonRow className="slider__input">
               <IonCol>
                 <IonAvatar className="slider__avatar">
-                  <img src={photoUrl} alt="user" />
+                  <img className="slider__image"src={photoUrl} alt="user" />
                 </IonAvatar>
                 <Button name="choose photo" onClickHandler={onClickUploadPhotoHandler} />
               </IonCol>

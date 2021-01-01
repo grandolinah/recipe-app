@@ -91,7 +91,7 @@ export const updateUserDocument = async (user: any, additionalInfo: any) => {
       }
     } else if (additionalInfo.photoURL) {
       newData = {
-        photoUrl: additionalInfo.photoUrl,
+        photoURL: additionalInfo.photoURL,
       }
     } else if (additionalInfo.favoriteCuisines) {
       const array = [...additionalInfo.favoriteCuisines];
