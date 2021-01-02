@@ -22,22 +22,25 @@ const Login: React.FC<RouteComponentProps> = () => {
   const [passwordLabel, setPasswordLabel] = useState<string>('password');
   const [passwordLabelColor, setPasswordLabelColor] = useState<string>('primary');
 
-  const [confirmPasswordLabel, setConfirmPasswordLabel] = useState<string>('confirm Password');
+  const [confirmPasswordLabel, setConfirmPasswordLabel] = useState<string>('confirm password');
   const [confirmPasswordLabelColor, setConfirmPasswordLabelColor] = useState<string>('primary');
 
-  console.log(emailInputRef.current?.value, passwordInputRef.current?.value, confirmPasswordInputRef.current?.value)
-  const onClickLoginHandler = async () => {
-    const email = emailInputRef.current ? emailInputRef.current?.value : null;
-    const password = passwordInputRef.current ? passwordInputRef.current?.value : null;
 
+  const validateInput = (form: string, email: any, password: any, confirmPassword: any) => {
     const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (email === '' || !regex.test(`${email}`)) {
+    const emailIncorrect = !regex.test(`${email}`);
+    const emailNoInput = email === '';
+    const passwordNoInput = password === '';
+    const confirmPasswordNoInput = confirmPassword === '';
+    const passwordsDontMatch = password !== confirmPassword;
+
+    if (emailIncorrect || emailNoInput) {
       setEmailLabelColor('danger');
 
-      if (email === '') {
+      if (emailNoInput) {
         setEmailLabel('write your email');
-      } else if (!regex.test(`${email}`)) {
+      } else if (emailIncorrect) {
         setEmailLabel('incorrect email');
       }
     } else {
@@ -45,7 +48,7 @@ const Login: React.FC<RouteComponentProps> = () => {
       setEmailLabelColor('primary');
     }
 
-    if (password === '') {
+    if (passwordNoInput) {
       setPasswordLabel('write your password');
       setPasswordLabelColor('danger');
     } else {
@@ -53,8 +56,48 @@ const Login: React.FC<RouteComponentProps> = () => {
       setPasswordLabelColor('primary');
     }
 
-    if (email !== '' && password !== '' && regex.test(`${email}`)) {
-      // auth
+    if (form === 'register') {
+      if (passwordsDontMatch || confirmPasswordNoInput) {
+        if (confirmPasswordNoInput) {
+          setConfirmPasswordLabel('should be at least 6 chars');
+          setConfirmPasswordLabelColor('danger');
+        } else if (passwordsDontMatch) {
+          setPasswordLabel('passwords do not match');
+          setPasswordLabelColor('danger');
+
+          setConfirmPasswordLabel('passwords do not match');
+          setConfirmPasswordLabelColor('danger');
+        } else if (!passwordsDontMatch) {
+          setPasswordLabel('password');
+          setPasswordLabelColor('primary');
+
+          setConfirmPasswordLabel('confirm password');
+          setConfirmPasswordLabelColor('primary');
+        } else {
+          setConfirmPasswordLabel('confirm password');
+          setConfirmPasswordLabelColor('primary');
+        }
+      }
+    }
+
+    if (password !== '' && regex.test(`${email}`) && form === 'login') {
+      return true;
+    }
+
+    if (password !== '' && regex.test(`${email}`) && password === confirmPassword && form === 'register') {
+      return true;
+    }
+
+    return false;
+  }
+
+  const onClickLoginHandler = async () => {
+    const email = emailInputRef.current ? emailInputRef.current?.value : null;
+    const password = passwordInputRef.current ? passwordInputRef.current?.value : null;
+
+    const isValidated = validateInput('login', email, password, null);
+
+    if (isValidated) {
       signInWithEmailAndPasswordHandler(email, password);
 
       // clean input
@@ -63,36 +106,21 @@ const Login: React.FC<RouteComponentProps> = () => {
     }
   };
 
-  const onClickGToRegisterHandler = () => {
-    // reset all
-    setIsModalVisible(!isModalVisible);
-  };
-
   const onClickRegisterHandler = () => {
-    // TODO register
-
-    // TODO error notification
-    // if passwords dont match
-    // if empty input
-    // if already registered
-
     const email = emailInputRef.current?.value;
     const password = passwordInputRef.current?.value;
     const confirmPassword = confirmPasswordInputRef.current?.value;
+    const isValidated = validateInput('register', email, password, confirmPassword);
 
-    if (password === confirmPassword && email !== '') {
-      // register
+    if (isValidated) {
       createUserWithEmailAndPassword(email, password);
-    } else if (password !== confirmPassword) {
-      // notificaiton passwords dont match
-    }
-    // if all good
-    setIsModalVisible(false);
+      setIsModalVisible(false);
 
-    // clean input
-    emailInputRef.current!.value = '';
-    passwordInputRef.current!.value = '';
-    confirmPasswordInputRef.current!.value = '';
+      // clean input
+      emailInputRef.current!.value = '';
+      passwordInputRef.current!.value = '';
+      confirmPasswordInputRef.current!.value = '';
+    }
   };
 
   return (
@@ -106,7 +134,7 @@ const Login: React.FC<RouteComponentProps> = () => {
             <IonCol>
               <IonItem>
                 <IonLabel position="floating" color={emailLabelColor}>{emailLabel}</IonLabel>
-                <IonInput className="input" ref={emailInputRef} clearInput></IonInput>
+                <IonInput className="input" ref={emailInputRef} clearInput ></IonInput>
               </IonItem>
             </IonCol>
           </IonRow>
@@ -114,7 +142,7 @@ const Login: React.FC<RouteComponentProps> = () => {
             <IonCol>
               <IonItem>
                 <IonLabel position="floating" color={passwordLabelColor}>{passwordLabel}</IonLabel>
-                <IonInput ref={passwordInputRef} type="password" clearInput></IonInput>
+                <IonInput ref={passwordInputRef} type="password" clearInput ></IonInput>
               </IonItem>
             </IonCol>
           </IonRow>
@@ -122,7 +150,7 @@ const Login: React.FC<RouteComponentProps> = () => {
             <Button onClickHandler={onClickLoginHandler} name="Login" icon={arrowForwardOutline} />
           </IonRow>
           <IonRow className="ion-justify-content-center ion-margin-top">
-            <IonButton onClick={onClickGToRegisterHandler} color="dark" fill="clear" size="small">Dont have account?</IonButton>
+            <IonButton onClick={() => setIsModalVisible(!isModalVisible)} color="dark" fill="clear" size="small">Dont have account?</IonButton>
           </IonRow>
         </IonGrid>
       </IonContent>
