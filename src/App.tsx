@@ -1,8 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Home from './pages/Home';
+
+import { auth, generateUserDocument, getUserDocument } from "./services/firebase-service";
+
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+
+import { UserContext } from "./UserContext";
+
+import urls from "./config/urls";
+
+import Loading from './pages/Loading/Loading';
+import Login from './pages/Login/Login';
+import Onboarding from './pages/Onbording/Onboarding';
+import Tab from './Tab';
+
+import './styles/App.scss';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -23,15 +37,86 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.scss';
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route path="/home" component={Home} exact={true} />
-        <Route exact path="/" render={() => <Redirect to="/home" />} />
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+export interface User {
+  uid: string;
+  email?: string;
+  photoUrl?: string
+  displayName?: string;
+  firstName?: string;
+}
+
+const App: React.FC = () => {
+  const [user, setUser] = useState<User>();
+  const [isAuth, setIsAuth] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isOnboarded, setIsOnboarded] = useState(false);
+
+  console.log(user);
+  console.log(isAuth);
+  useEffect(() => {
+    auth.onAuthStateChanged(async userAuth => {
+      const user = await generateUserDocument(userAuth);
+
+      if (user?.uid) {
+        setIsAuth(true);
+        setUser(user);
+
+        const userDocument = await getUserDocument(user?.uid);
+
+        if (userDocument?.hasOwnProperty('firstName')) {
+          Object.entries(userDocument).forEach(([key, value]) => {
+            if (key === 'firstName' && value !== '') {
+              setIsOnboarded(true);
+            }
+          });
+        }
+      } else {
+        setIsAuth(false);
+      }
+
+      setIsLoaded(true);
+    });
+  }, [isAuth]);
+
+  return (
+    <UserContext.Provider value={user}>
+      <IonApp>
+        {!isLoaded ? (
+          <Loading />
+        ) : (
+            <IonReactRouter>
+              {isAuth ? (
+                <IonRouterOutlet>
+                  <ProtectedRoute path={urls.ONBOARDING} component={Onboarding} isAuth={isAuth} />
+                  <ProtectedRoute path={urls.APP} component={Tab} isAuth={isAuth} />
+                  <Route exact path="/" render={() => {
+                    if (isAuth && !isOnboarded) {
+                      return <Redirect to={urls.ONBOARDING} />
+                    } else if (isAuth && isOnboarded) {
+                      return <Redirect to={urls.APP} />
+                    }
+                  }} />
+                  <Route exact path={urls.LOGIN} render={() => {
+                    if (!isOnboarded) {
+                      return <Redirect to={urls.ONBOARDING} />
+                    } else {
+                      return <Redirect to={urls.APP} />
+                    }
+                  }} />
+                </IonRouterOutlet>
+              ) : (
+                  <IonRouterOutlet>
+                    <Route path={urls.LOGIN} component={Login} exact={true} />
+                    <Route exact path="/" render={() => {
+                      return <Redirect to={urls.LOGIN} />
+                    }} />
+                  </IonRouterOutlet>
+                )}
+            </IonReactRouter>
+          )}
+      </IonApp>
+    </UserContext.Provider>
+  );
+}
 
 export default App;

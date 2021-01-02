@@ -1,0 +1,14 @@
+.home-page {
+  &__grid {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 300px;
+    max-width: 90%;
+  }
+
+  &__modal .modal-wrapper {
+    align-self: flex-end;
+    --max-height: 80%;
+  }
+}

@@ -1,0 +1,30 @@
+$fontSize: 15px;
+
+$white: #ffffff;
+$black: #000000;
+
+$colorGray30: #4D4D4D;
+$colorGray60: #999999;
+$colorGray92: #EBEBEB;
+$colorLightBlue: #25aae2;
+
+$textColor: $colorGray30;
+$secondaryTextColor: $colorGray60;
+
+$btnColor: #eb4034;
+$radioBtnColor: $colorLightBlue;
+
+$transition: .3s ease-in-out;
+
+$primaryFont: 'Montserrat';
+// $fontAwesome: 'FontAwesome';
+// $secondaryFont: 'Trade Gothic LT Std';
+
+$gridWidth: 1200px;
+$spacing: 18px;
+
+$breakpoints: (
+  small: 480px,
+  medium: 640px,
+  large: 992px
+);
