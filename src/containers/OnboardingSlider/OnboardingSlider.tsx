@@ -7,7 +7,7 @@ import { useStorage } from '@ionic/react-hooks/storage';
 import { isPlatform } from '@ionic/react';
 import { CameraResultType, CameraSource, CameraPhoto, Capacitor, FilesystemDirectory } from "@capacitor/core";
 
-import { UserContext } from '../../UserContext';
+import { UserContext } from '../../context/UserContext';
 
 import Button from '../../components/Button/Button';
 

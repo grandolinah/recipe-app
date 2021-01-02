@@ -3,10 +3,10 @@ import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet } 
 import { Redirect, Route } from 'react-router-dom';
 import { addOutline, personCircle, peopleCircle, nutrition } from 'ionicons/icons';
 
-import Home from './pages/Home/Home';
-import Chiefs from './pages/Chiefs/Chiefs';
-import Recipes from './pages/Recipes/Recipes';
-import Account from './pages/Account/Account';
+import Home from '../../pages/Home/Home';
+import Chiefs from '../../pages/Chiefs/Chiefs';
+import Recipes from '../../pages/Recipes/Recipes';
+import Account from '../../pages/Account/Account';
 
 const Tab: React.FC = () => {
   return (

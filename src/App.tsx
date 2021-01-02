@@ -7,14 +7,14 @@ import { auth, generateUserDocument, getUserDocument } from "./services/firebase
 
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
-import { UserContext } from "./UserContext";
+import { UserContext } from "./context/UserContext";
 
 import urls from "./config/urls";
 
 import Loading from './pages/Loading/Loading';
 import Login from './pages/Login/Login';
 import Onboarding from './pages/Onbording/Onboarding';
-import Tab from './Tab';
+import Tab from './components/Tab/Tab';
 
 import './styles/App.scss';
 
@@ -51,8 +51,6 @@ const App: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isOnboarded, setIsOnboarded] = useState(false);
 
-  console.log(user);
-  console.log(isAuth);
   useEffect(() => {
     auth.onAuthStateChanged(async userAuth => {
       const user = await generateUserDocument(userAuth);
