@@ -57,7 +57,7 @@ const OnboardingSlider = () => {
   const [photoUrl, setPhotoUrl] = useState<any>(user?.photoURL ? user.photoURL
     : 'https://firebasestorage.googleapis.com/v0/b/ionic-recipes-6daa6.appspot.com/o/users%2Fdefault-user-image.png?alt=media&token=7963c406-089f-444e-9262-f22b1524fe45');
   const { notification, setNotification } = useNotificationContext();
-  console.log(user);
+
   const onClickFirstNameHandler = async () => {
     const firstName = firstNameInputRef.current ? firstNameInputRef.current?.value : null;
 
