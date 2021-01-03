@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet } from '@ionic/react';
+import { IonApp, IonRouterOutlet, IonToast } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
-import { auth, generateUserDocument, getUserDocument } from "./services/firebase-service";
+import { auth, generateUserDocument, getUserDocument } from './services/firebase-service';
 
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
-import { UserContext } from "./UserContext";
+import { UserContext } from './context/UserContext';
+import { NotificationContext } from './context/NotificationContext';
 
-import urls from "./config/urls";
+import urls from './config/urls';
 
 import Loading from './pages/Loading/Loading';
 import Login from './pages/Login/Login';
 import Onboarding from './pages/Onbording/Onboarding';
-import Tab from './Tab';
+import Tab from './components/Tab/Tab';
 
 import './styles/App.scss';
 
@@ -37,7 +38,7 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.scss';
 
-export interface User {
+export interface UserInterface {
   uid: string;
   email?: string;
   photoUrl?: string
@@ -45,14 +46,21 @@ export interface User {
   firstName?: string;
 }
 
-const App: React.FC = () => {
-  const [user, setUser] = useState<User>();
-  const [isAuth, setIsAuth] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isOnboarded, setIsOnboarded] = useState(false);
+export interface NotificationInterface {
+  message: string;
+  color: string;
+}
 
-  console.log(user);
-  console.log(isAuth);
+const App: React.FC = () => {
+  const [user, setUser] = useState<UserInterface>();
+  const [notification, setNotification] = useState<any>();
+
+  const [isAuth, setIsAuth] = useState<boolean>(false);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [isOnboarded, setIsOnboarded] = useState<boolean>(false);
+
+  const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
+
   useEffect(() => {
     auth.onAuthStateChanged(async userAuth => {
       const user = await generateUserDocument(userAuth);
@@ -78,44 +86,64 @@ const App: React.FC = () => {
     });
   }, [isAuth]);
 
+  useEffect(() => {
+    if (notification?.message !== '') {
+      setIsToastVisible(true);
+    }
+  }, [notification]);
+
   return (
-    <UserContext.Provider value={user}>
-      <IonApp>
-        {!isLoaded ? (
-          <Loading />
-        ) : (
-            <IonReactRouter>
-              {isAuth ? (
-                <IonRouterOutlet>
-                  <ProtectedRoute path={urls.ONBOARDING} component={Onboarding} isAuth={isAuth} />
-                  <ProtectedRoute path={urls.APP} component={Tab} isAuth={isAuth} />
-                  <Route exact path="/" render={() => {
-                    if (isAuth && !isOnboarded) {
-                      return <Redirect to={urls.ONBOARDING} />
-                    } else if (isAuth && isOnboarded) {
-                      return <Redirect to={urls.APP} />
-                    }
-                  }} />
-                  <Route exact path={urls.LOGIN} render={() => {
-                    if (!isOnboarded) {
-                      return <Redirect to={urls.ONBOARDING} />
-                    } else {
-                      return <Redirect to={urls.APP} />
-                    }
-                  }} />
-                </IonRouterOutlet>
-              ) : (
+    <NotificationContext.Provider value={{ notification, setNotification }}>
+      <UserContext.Provider value={user}>
+        <IonApp>
+          {isToastVisible && notification?.message !== '' && notification?.color ? (
+            <IonToast
+              isOpen={isToastVisible}
+              onDidDismiss={(): any => {
+                setNotification({ message: '', color: 'primary' })
+              }}
+              message={notification.message}
+              duration={2000}
+              color={notification.color}
+            />
+          ) : null}
+
+          {!isLoaded ? (
+            <Loading />
+          ) : (
+              <IonReactRouter>
+                {isAuth ? (
                   <IonRouterOutlet>
-                    <Route path={urls.LOGIN} component={Login} exact={true} />
+                    <ProtectedRoute path={urls.ONBOARDING} component={Onboarding} isAuth={isAuth} />
+                    <ProtectedRoute path={urls.APP} component={Tab} isAuth={isAuth} />
                     <Route exact path="/" render={() => {
-                      return <Redirect to={urls.LOGIN} />
+                      if (isAuth && !isOnboarded) {
+                        return <Redirect to={urls.ONBOARDING} />
+                      } else if (isAuth && isOnboarded) {
+                        return <Redirect to={urls.APP} />
+                      }
+                    }} />
+                    <Route exact path={urls.LOGIN} render={() => {
+                      if (!isOnboarded) {
+                        return <Redirect to={urls.ONBOARDING} />
+                      } else {
+                        return <Redirect to={urls.APP} />
+                      }
                     }} />
                   </IonRouterOutlet>
-                )}
-            </IonReactRouter>
-          )}
-      </IonApp>
-    </UserContext.Provider>
+                ) : (
+                    <IonRouterOutlet>
+                      <Route path={urls.LOGIN} component={Login} exact={true} />
+                      <Route exact path="/" render={() => {
+                        return <Redirect to={urls.LOGIN} />
+                      }} />
+                    </IonRouterOutlet>
+                  )}
+              </IonReactRouter>
+            )}
+        </IonApp>
+      </UserContext.Provider>
+    </NotificationContext.Provider>
   );
 }
 
