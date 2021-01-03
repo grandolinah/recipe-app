@@ -7,6 +7,8 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPasswordHandler } fro
 import Button from '../../components/Button/Button';
 import Header from '../../components/Header/Header';
 
+import { useNotificationContext } from '../../context/NotificationContext';
+
 import './Login.scss';
 
 const Login: React.FC<RouteComponentProps> = () => {
@@ -25,6 +27,7 @@ const Login: React.FC<RouteComponentProps> = () => {
   const [confirmPasswordLabel, setConfirmPasswordLabel] = useState<string>('confirm password');
   const [confirmPasswordLabelColor, setConfirmPasswordLabelColor] = useState<string>('primary');
 
+  const { notification, setNotification } = useNotificationContext();
 
   const validateInput = (form: string, email: any, password: any, confirmPassword: any) => {
     const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -40,8 +43,18 @@ const Login: React.FC<RouteComponentProps> = () => {
 
       if (emailNoInput) {
         setEmailLabel('write your email');
+
+        setNotification({
+          message: 'Please write your email.',
+          color: 'danger',
+        });
       } else if (emailIncorrect) {
         setEmailLabel('incorrect email');
+
+        setNotification({
+          message: 'Please make sure your email is correct.',
+          color: 'danger',
+        });
       }
     } else {
       setEmailLabel('email');
@@ -51,6 +64,11 @@ const Login: React.FC<RouteComponentProps> = () => {
     if (passwordNoInput) {
       setPasswordLabel('write your password');
       setPasswordLabelColor('danger');
+
+      setNotification({
+        message: 'Please write your password.',
+        color: 'danger',
+      });
     } else {
       setPasswordLabel('password');
       setPasswordLabelColor('primary');
@@ -61,12 +79,22 @@ const Login: React.FC<RouteComponentProps> = () => {
         if (confirmPasswordNoInput) {
           setConfirmPasswordLabel('should be at least 6 chars');
           setConfirmPasswordLabelColor('danger');
+
+          setNotification({
+            message: 'Please make sure your password is at least six characters.',
+            color: 'danger',
+          });
         } else if (passwordsDontMatch) {
           setPasswordLabel('passwords do not match');
           setPasswordLabelColor('danger');
 
           setConfirmPasswordLabel('passwords do not match');
           setConfirmPasswordLabelColor('danger');
+
+          setNotification({
+            message: 'Your passwords do not match, please try again.',
+            color: 'danger',
+          });
         } else if (!passwordsDontMatch) {
           setPasswordLabel('password');
           setPasswordLabelColor('primary');
@@ -80,11 +108,19 @@ const Login: React.FC<RouteComponentProps> = () => {
       }
     }
 
-    if (password !== '' && regex.test(`${email}`) && form === 'login') {
-      return true;
-    }
+    if ((password !== '' &&
+      regex.test(`${email}`) &&
+      form === 'login') ||
+      (password !== '' &&
+        regex.test(`${email}`) &&
+        password === confirmPassword &&
+        form === 'register')
+    ) {
+      setNotification({
+        message: 'Your are logged in. Please wait to be redirected.',
+        color: 'primary',
+      });
 
-    if (password !== '' && regex.test(`${email}`) && password === confirmPassword && form === 'register') {
       return true;
     }
 

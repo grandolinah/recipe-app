@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
-import { Route, Redirect } from "react-router";
+import { Route, Redirect } from 'react-router';
 
 export type ProtectedRouteProps = {
   component: React.ComponentType<any>;

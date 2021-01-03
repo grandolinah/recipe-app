@@ -5,9 +5,10 @@ import { useCamera } from '@ionic/react-hooks/camera';
 import { useFilesystem, base64FromPath } from '@ionic/react-hooks/filesystem';
 import { useStorage } from '@ionic/react-hooks/storage';
 import { isPlatform } from '@ionic/react';
-import { CameraResultType, CameraSource, CameraPhoto, Capacitor, FilesystemDirectory } from "@capacitor/core";
+import { CameraResultType, CameraSource, CameraPhoto, Capacitor, FilesystemDirectory } from '@capacitor/core';
 
 import { UserContext } from '../../context/UserContext';
+import { useNotificationContext } from '../../context/NotificationContext';
 
 import Button from '../../components/Button/Button';
 
@@ -29,7 +30,7 @@ let swiper: any;
 const slideOpts = {
   initialSlide: 0,
   speed: 400,
-  allowTouchMove: true,
+  allowTouchMove: false,
   pagination: false,
   on: {
     beforeInit() {
@@ -53,9 +54,10 @@ const OnboardingSlider = () => {
   const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
   const [photos, setPhotos] = useState<any[]>([]);
   const user = useContext(UserContext);
-  const [photoUrl, setPhotoUrl] = useState<any>(user?.photoURL ? user.photoURL 
+  const [photoUrl, setPhotoUrl] = useState<any>(user?.photoURL ? user.photoURL
     : 'https://firebasestorage.googleapis.com/v0/b/ionic-recipes-6daa6.appspot.com/o/users%2Fdefault-user-image.png?alt=media&token=7963c406-089f-444e-9262-f22b1524fe45');
-
+  const { notification, setNotification } = useNotificationContext();
+  console.log(user);
   const onClickFirstNameHandler = async () => {
     const firstName = firstNameInputRef.current ? firstNameInputRef.current?.value : null;
 
@@ -63,6 +65,11 @@ const OnboardingSlider = () => {
       await updateUserDocument(user, { firstName: firstName });
 
       swiper.slideNext();
+    } else {
+      setNotification({
+        message: 'Your need to fill your name.',
+        color: 'danger',
+      });
     }
   }
 
@@ -73,6 +80,11 @@ const OnboardingSlider = () => {
       await updateUserDocument(user, { secondName: secondName });
 
       swiper.slideNext();
+    } else {
+      setNotification({
+        message: 'Your need to fill your second name.',
+        color: 'danger',
+      });
     }
   }
 
@@ -81,6 +93,11 @@ const OnboardingSlider = () => {
       await updateUserDocument(user, { favoriteCuisines: selectedCuisines });
 
       swiper.slideNext();
+    } else {
+      setNotification({
+        message: 'Your need to fill your interests.',
+        color: 'danger',
+      });
     }
   }
 
@@ -144,16 +161,16 @@ const OnboardingSlider = () => {
     set(PHOTO_STORAGE, JSON.stringify(newPhotos));
 
     uploadImage(base64Data, user.uid).then(
-      function(result) { 
+      function (result) {
         setPhotoUrl(result);
       },
-      function(error) { console.log(error) }
+      function (error) { console.log(error) }
     );
   };
 
   useEffect(() => {
 
-      updateUserDocument(user, { photoURL: photoUrl });
+    updateUserDocument(user, { photoURL: photoUrl });
   }, [photoUrl, user])
 
   return (
@@ -237,7 +254,7 @@ const OnboardingSlider = () => {
             <IonRow className="slider__input">
               <IonCol>
                 <IonAvatar className="slider__avatar">
-                  <img className="slider__image"src={photoUrl} alt="user" />
+                  <img className="slider__image" src={photoUrl} alt="user" />
                 </IonAvatar>
                 <Button name="choose photo" onClickHandler={onClickUploadPhotoHandler} />
               </IonCol>

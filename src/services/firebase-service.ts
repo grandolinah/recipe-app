@@ -118,14 +118,14 @@ export const updateUserDocument = async (user: any, additionalInfo: any) => {
 // create user
 export const createUserWithEmailAndPassword = (email: any, password: any) => {
   auth.createUserWithEmailAndPassword(email, password).catch(error => {
-    console.error("Error signing in with password and email", error);
+    console.error('Error signing in with password and email', error);
   });
 };
 
 // sign in user
 export const signInWithEmailAndPasswordHandler = (email: any, password: any) => {
   auth.signInWithEmailAndPassword(email, password).catch(error => {
-    console.error("Error signing in with password and email", error);
+    console.error('Error signing in with password and email', error);
   });
 };
 
@@ -181,5 +181,5 @@ export const uploadImage = async (file: any, currentUserId: string) => {
           resolve(downloadURL);
         });
       });
-    })
+  })
 };
