@@ -186,7 +186,7 @@ const Login: React.FC<RouteComponentProps> = () => {
             <Button onClickHandler={onClickLoginHandler} name="Login" icon={arrowForwardOutline} />
           </IonRow>
           <IonRow className="ion-justify-content-center ion-margin-top">
-            <IonButton onClick={() => setIsModalVisible(!isModalVisible)} color="dark" fill="clear" size="small">Dont have account?</IonButton>
+            <IonButton onClick={() => setIsModalVisible(!isModalVisible)} color="dark" fill="clear" size="small">Don't Have an Account?</IonButton>
           </IonRow>
         </IonGrid>
       </IonContent>
