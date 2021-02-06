@@ -100,10 +100,10 @@ export const updateUserDocument = async (user: any, additionalInfo: any) => {
         favoriteCuisines: array,
       }
     } else if (additionalInfo.favoriteChiefs) {
-      const array = [...additionalInfo.favoriteCuisines];
+      const array = [...additionalInfo.favoriteChiefs];
 
       newData = {
-        favoriteCuisines: array,
+        favoriteChiefs: array,
       }
     }
 
