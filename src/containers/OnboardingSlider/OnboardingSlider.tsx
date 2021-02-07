@@ -1,5 +1,5 @@
 import React, { useRef, useContext, useState, useEffect } from 'react';
-import { IonSlides, IonSlide, IonContent, IonGrid, IonCol, IonRow, IonInput, IonItem, IonLabel, IonTitle, IonSelect, IonSelectOption, IonAvatar } from '@ionic/react';
+import { IonSlides, IonSlide, IonContent, IonGrid, IonCol, IonRow, IonInput, IonItem, IonLabel, IonText, IonSelect, IonSelectOption, IonAvatar } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { useCamera } from '@ionic/react-hooks/camera';
 import { useFilesystem, base64FromPath } from '@ionic/react-hooks/filesystem';
@@ -180,7 +180,7 @@ const OnboardingSlider = () => {
           <IonGrid>
             <IonRow className="slider__description">
               <IonCol>
-                <IonTitle>What is your first name</IonTitle>
+                <IonText>What is your first name</IonText>
               </IonCol>
             </IonRow>
             <IonRow className="slider__input">
@@ -202,7 +202,7 @@ const OnboardingSlider = () => {
           <IonGrid>
             <IonRow className="slider__description">
               <IonCol>
-                <IonTitle>What is your second name</IonTitle>
+                <IonText>What is your second name</IonText>
               </IonCol>
             </IonRow>
             <IonRow className="slider__input">
@@ -224,7 +224,7 @@ const OnboardingSlider = () => {
           <IonGrid>
             <IonRow className="slider__description">
               <IonCol>
-                <IonTitle>What are your favorite cuisines?</IonTitle>
+                <IonText>What are your favorite cuisines?</IonText>
               </IonCol>
             </IonRow>
             <IonRow className="slider__input">
@@ -248,7 +248,7 @@ const OnboardingSlider = () => {
           <IonGrid>
             <IonRow className="slider__description">
               <IonCol>
-                <IonTitle>Do you want to upload photo?</IonTitle>
+                <IonText>Do you want to upload photo?</IonText>
               </IonCol>
             </IonRow>
             <IonRow className="slider__input">

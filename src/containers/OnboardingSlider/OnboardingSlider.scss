@@ -4,13 +4,14 @@
   }
 
   &__description {
+    height: 50px;
     margin-bottom: 20px;
   }
 
   &__input {
-    height: 80%;
     width: 300px;
     max-width: 90%;
+    height: 80%;
     margin: auto;
   }
 
