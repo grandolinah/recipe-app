@@ -1,0 +1,35 @@
+@import '../../styles/config/variables';
+
+.account {
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+
+  &__grid {
+    height: 100%;
+  }
+  &__avatar-box {
+    width: 300px;
+    max-width: 90%;
+    height: 150px;
+    margin: auto;
+  }
+
+  &__avatar {
+    margin: 20px auto;
+    border: solid 2px $white;
+  }
+
+  &__image {
+    height: 100% !important;
+  }
+
+  &__input-box {
+    margin-bottom: 20px;
+  }
+
+  &__update-button {
+    justify-content: center;
+    margin-top: 100px;
+  }
+}
