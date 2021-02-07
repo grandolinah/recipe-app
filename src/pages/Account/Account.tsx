@@ -1,12 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { IonPage, IonAvatar, IonContent, IonGrid, IonRow, IonCol, IonItem, IonInput, IonSelect, IonSelectOption, IonItemDivider } from '@ionic/react';
-import { useCamera } from '@ionic/react-hooks/camera';
-import { useFilesystem, base64FromPath } from '@ionic/react-hooks/filesystem';
-import { useStorage } from '@ionic/react-hooks/storage';
-import { isPlatform } from '@ionic/react';
-import { CameraResultType, CameraSource, CameraPhoto, Capacitor, FilesystemDirectory } from '@capacitor/core';
 
 import { updateUserDocument, uploadImage } from '../../services/firebase-service';
+
+import { usePhotoGallery } from '../../hooks/usePhotoGallery';
 
 import { UserContext } from '../../context/UserContext';
 import { useNotificationContext } from '../../context/NotificationContext';
@@ -15,90 +12,19 @@ import Button from '../../components/Button/Button';
 
 import './Account.scss';
 
-const PHOTO_STORAGE = 'photos';
-
-export interface Photo {
-  filepath: string;
-  webviewPath?: string;
-}
-
-export interface PhotoInterface {
-  filepath: string;
-  webviewPath?: string;
-}
-
 const Account: React.FC = () => {
   const user = useContext(UserContext);
   const [photoUrl, setPhotoUrl] = useState<any>(user?.photoURL ? user.photoURL
     : 'https://firebasestorage.googleapis.com/v0/b/ionic-recipes-6daa6.appspot.com/o/users%2Fdefault-user-image.png?alt=media&token=7963c406-089f-444e-9262-f22b1524fe45');
-  const { set } = useStorage();
-  const { getPhoto } = useCamera();
-  const { readFile, writeFile } = useFilesystem();
   const [firstName, setFirstName] = useState<string>(user.firstName);
   const [secondName, setSecondName] = useState<string>(user.secondName);
   const [selectedCuisines, setSelectedCuisines] = useState<string[]>(user.favoriteCuisines);
-  const [photos, setPhotos] = useState<any[]>([]);
   const { notification, setNotification } = useNotificationContext();
 
-  console.log(user);
-  const savePicture = async (photo: CameraPhoto, fileName: string): Promise<PhotoInterface> => {
-    let base64Data: string;
-
-    // "hybrid" will detect Cordova or Capacitor;
-    if (isPlatform('hybrid')) {
-      const file = await readFile({
-        path: photo.path!
-      });
-      base64Data = file.data;
-    } else {
-      base64Data = await base64FromPath(photo.webPath!);
-    }
-    const savedFile = await writeFile({
-      path: fileName,
-      data: base64Data,
-      directory: FilesystemDirectory.Data
-    });
-
-    if (isPlatform('hybrid')) {
-      // Display the new image by rewriting the 'file://' path to HTTP
-      // Details: https://ionicframework.com/docs/building/webview#file-protocol
-      return {
-        filepath: savedFile.uri,
-        webviewPath: Capacitor.convertFileSrc(savedFile.uri),
-      };
-    } else {
-      // Use webPath to display the new image instead of base64 since it's
-      // already loaded into memory
-      return {
-        filepath: fileName,
-        webviewPath: photo.webPath
-      };
-    }
-  };
+  const { takePhoto } = usePhotoGallery();
 
   const onClickUploadPhotoHandler = async () => {
-    const cameraPhoto = await getPhoto({
-      resultType: CameraResultType.Uri,
-      source: CameraSource.Camera,
-      quality: 100
-    });
-
-    const fileName = new Date().getTime() + '.jpeg';
-
-    const savedFileImage = await savePicture(cameraPhoto, fileName);
-
-    const newPhoto = {
-      filepath: fileName,
-      webviewPath: cameraPhoto.webPath
-    };
-
-    const newPhotos = [savedFileImage, ...photos];
-
-    setPhotos(newPhotos);
-
-    const base64Data = await base64FromPath(newPhoto.webviewPath!);
-
-    set(PHOTO_STORAGE, JSON.stringify(newPhotos));
+    const base64Data = await takePhoto();
 
     uploadImage(base64Data, user.uid).then(
       function (result) {
@@ -109,9 +35,10 @@ const Account: React.FC = () => {
   };
 
   const onPressUpdateHandler = async () => {
-    // check if there is change
-    const isInfoUpdated = firstName !== user.firstName || secondName !== user.secondName || selectedCuisines !== user.favoriteCousines;
-    console.log(isInfoUpdated);
+    const isInfoUpdated = firstName !== user.firstName ||
+      secondName !== user.secondName ||
+      selectedCuisines !== user.favoriteCousines;
+
     if (isInfoUpdated) {
       const updatedInfo = {
         firstName,
@@ -119,9 +46,6 @@ const Account: React.FC = () => {
         favoriteCuisines: selectedCuisines,
       }
 
-      console.log(updatedInfo);
-
-      // update changes
       try {
         await updateUserDocument(user, updatedInfo);
 
@@ -129,7 +53,7 @@ const Account: React.FC = () => {
           message: 'Changes have been saved.',
           color: 'primary',
         });
-      } catch(error) {
+      } catch (error) {
         setNotification({
           message: 'Changes have not been saved. Please try again.',
           color: 'danger',

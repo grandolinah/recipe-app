@@ -1,29 +1,19 @@
 import React, { useRef, useContext, useState, useEffect } from 'react';
 import { IonSlides, IonSlide, IonContent, IonGrid, IonCol, IonRow, IonInput, IonItem, IonLabel, IonText, IonSelect, IonSelectOption, IonAvatar } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
-import { useCamera } from '@ionic/react-hooks/camera';
-import { useFilesystem, base64FromPath } from '@ionic/react-hooks/filesystem';
-import { useStorage } from '@ionic/react-hooks/storage';
-import { isPlatform } from '@ionic/react';
-import { CameraResultType, CameraSource, CameraPhoto, Capacitor, FilesystemDirectory } from '@capacitor/core';
 
 import { UserContext } from '../../context/UserContext';
 import { useNotificationContext } from '../../context/NotificationContext';
 
 import Button from '../../components/Button/Button';
 
+import { usePhotoGallery } from '../../hooks/usePhotoGallery';
+
 import { updateUserDocument, uploadImage } from '../../services/firebase-service';
 
 import './OnboardingSlider.scss';
 
 import urls from '../../config/urls';
-
-const PHOTO_STORAGE = 'photos';
-
-export interface Photo {
-  filepath: string;
-  webviewPath?: string;
-}
 
 let swiper: any;
 
@@ -39,24 +29,16 @@ const slideOpts = {
   }
 };
 
-export interface PhotoInterface {
-  filepath: string;
-  webviewPath?: string;
-}
-
 const OnboardingSlider = () => {
   const firstNameInputRef = useRef<HTMLIonInputElement>(null);
   const secondNameInputRef = useRef<HTMLIonInputElement>(null);
   const history = useHistory();
-  const { set } = useStorage();
-  const { getPhoto } = useCamera();
-  const { readFile, writeFile } = useFilesystem();
   const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
-  const [photos, setPhotos] = useState<any[]>([]);
   const user = useContext(UserContext);
   const [photoUrl, setPhotoUrl] = useState<any>(user?.photoURL ? user.photoURL
     : 'https://firebasestorage.googleapis.com/v0/b/ionic-recipes-6daa6.appspot.com/o/users%2Fdefault-user-image.png?alt=media&token=7963c406-089f-444e-9262-f22b1524fe45');
   const { notification, setNotification } = useNotificationContext();
+  const { takePhoto } = usePhotoGallery();
 
   const onClickFirstNameHandler = async () => {
     const firstName = firstNameInputRef.current ? firstNameInputRef.current?.value : null;
@@ -101,64 +83,8 @@ const OnboardingSlider = () => {
     }
   }
 
-  const savePicture = async (photo: CameraPhoto, fileName: string): Promise<PhotoInterface> => {
-    let base64Data: string;
-
-    // "hybrid" will detect Cordova or Capacitor;
-    if (isPlatform('hybrid')) {
-      const file = await readFile({
-        path: photo.path!
-      });
-      base64Data = file.data;
-    } else {
-      base64Data = await base64FromPath(photo.webPath!);
-    }
-    const savedFile = await writeFile({
-      path: fileName,
-      data: base64Data,
-      directory: FilesystemDirectory.Data
-    });
-
-    if (isPlatform('hybrid')) {
-      // Display the new image by rewriting the 'file://' path to HTTP
-      // Details: https://ionicframework.com/docs/building/webview#file-protocol
-      return {
-        filepath: savedFile.uri,
-        webviewPath: Capacitor.convertFileSrc(savedFile.uri),
-      };
-    } else {
-      // Use webPath to display the new image instead of base64 since it's
-      // already loaded into memory
-      return {
-        filepath: fileName,
-        webviewPath: photo.webPath
-      };
-    }
-  };
-
   const onClickUploadPhotoHandler = async () => {
-    const cameraPhoto = await getPhoto({
-      resultType: CameraResultType.Uri,
-      source: CameraSource.Camera,
-      quality: 100
-    });
-
-    const fileName = new Date().getTime() + '.jpeg';
-
-    const savedFileImage = await savePicture(cameraPhoto, fileName);
-
-    const newPhoto = {
-      filepath: fileName,
-      webviewPath: cameraPhoto.webPath
-    };
-
-    const newPhotos = [savedFileImage, ...photos];
-
-    setPhotos(newPhotos);
-
-    const base64Data = await base64FromPath(newPhoto.webviewPath!);
-
-    set(PHOTO_STORAGE, JSON.stringify(newPhotos));
+    const base64Data = await takePhoto();
 
     uploadImage(base64Data, user.uid).then(
       function (result) {
@@ -169,7 +95,6 @@ const OnboardingSlider = () => {
   };
 
   useEffect(() => {
-
     updateUserDocument(user, { photoURL: photoUrl });
   }, [photoUrl, user])
 
