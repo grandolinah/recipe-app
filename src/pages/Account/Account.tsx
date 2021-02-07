@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { IonPage, IonAvatar, IonContent, IonGrid, IonRow, IonCol, IonItem, IonInput, IonSelect, IonSelectOption, IonItemDivider } from '@ionic/react';
+import { IonPage, IonAvatar, IonContent, IonGrid, IonRow, IonCol, IonItem, IonInput, IonSelect, IonSelectOption, IonItemDivider, IonText } from '@ionic/react';
 
 import { updateUserDocument, uploadImage } from '../../services/firebase-service';
 
@@ -70,6 +70,9 @@ const Account: React.FC = () => {
     <IonPage className="account">
       <IonContent>
         <IonGrid className="account__grid">
+          <IonRow className="account__title">
+            <IonText>Photo</IonText>
+          </IonRow>
           <IonRow className="account__avatar-box ion-align-items-center ion-justify-content-center">
             <IonCol>
               <IonAvatar className="account__avatar">
@@ -77,19 +80,22 @@ const Account: React.FC = () => {
               </IonAvatar>
             </IonCol>
             <IonCol>
-              <Button name="update photo" onClickHandler={onClickUploadPhotoHandler} />
+              <Button name="change" onClickHandler={onClickUploadPhotoHandler} />
             </IonCol>
           </IonRow>
-          <IonItemDivider>First Name</IonItemDivider>
+          <IonRow className="account__title">
+            <IonText>Personal info</IonText>
+          </IonRow>
           <IonRow className="account__input-box">
+            <IonItemDivider>First Name</IonItemDivider>
             <IonCol>
               <IonItem>
                 <IonInput className="account__input" value={firstName} onIonChange={e => setFirstName(e.detail.value!)}></IonInput>
               </IonItem>
             </IonCol>
           </IonRow>
-          <IonItemDivider>Surname</IonItemDivider>
           <IonRow className="account__input-box">
+            <IonItemDivider>Surname</IonItemDivider>
             <IonCol>
               <IonItem>
                 <IonInput className="account__input" value={secondName} onIonChange={e => setSecondName(e.detail.value!)}></IonInput>
@@ -109,6 +115,9 @@ const Account: React.FC = () => {
           </IonRow>
           <IonRow className="account__update-button">
             <Button name="update" onClickHandler={onPressUpdateHandler} />
+          </IonRow>
+          <IonRow className="account__title">
+            <IonText>Theme</IonText>
           </IonRow>
         </IonGrid>
       </IonContent>
