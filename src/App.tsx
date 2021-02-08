@@ -65,8 +65,7 @@ const App: React.FC = () => {
     auth.onAuthStateChanged(async userAuth => {
       const user = await generateUserDocument(userAuth);
 
-      if (user?.uid) {
-        setIsAuth(true);
+      if (user) {
         setUser(user);
 
         const userDocument = await getUserDocument(user?.uid);
@@ -78,8 +77,11 @@ const App: React.FC = () => {
             }
           });
         }
+
+        setIsAuth(true);
       } else {
         setIsAuth(false);
+        setUser(undefined);
       }
 
       setIsLoaded(true);
