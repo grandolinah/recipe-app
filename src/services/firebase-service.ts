@@ -129,8 +129,13 @@ export const signInWithEmailAndPasswordHandler = (email: any, password: any) => 
   });
 };
 
-// TODO
 // sign out user
+export const signOutHandler = () => {
+  auth.signOut().then(() => console.log('logged out')).catch(error => {
+    console.error('Error signing out', error);
+  });;
+}
+
 // delete user
 
 export const uploadImage = async (file: any, currentUserId: string) => {

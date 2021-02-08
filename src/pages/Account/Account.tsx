@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { IonPage, IonAvatar, IonContent, IonGrid, IonRow, IonCol, IonItem, IonInput, IonSelect, IonSelectOption, IonItemDivider, IonText } from '@ionic/react';
+import { useHistory } from "react-router-dom";
 
-import { updateUserDocument, uploadImage } from '../../services/firebase-service';
+import { updateUserDocument, uploadImage, signOutHandler } from '../../services/firebase-service';
 
 import { usePhotoGallery } from '../../hooks/usePhotoGallery';
 
@@ -9,6 +10,7 @@ import { UserContext } from '../../context/UserContext';
 import { useNotificationContext } from '../../context/NotificationContext';
 
 import Button from '../../components/Button/Button';
+import Header from '../../components/Header/Header';
 
 import './Account.scss';
 
@@ -20,6 +22,7 @@ const Account: React.FC = () => {
   const [secondName, setSecondName] = useState<string>(user.secondName);
   const [selectedCuisines, setSelectedCuisines] = useState<string[]>(user.favoriteCuisines);
   const { notification, setNotification } = useNotificationContext();
+  const history = useHistory();
 
   const { takePhoto } = usePhotoGallery();
 
@@ -62,12 +65,26 @@ const Account: React.FC = () => {
     }
   };
 
+  const onPressLogoutHandler = async () => {
+    try {
+      signOutHandler();
+      // console.log(history);
+      // history.push('/login');
+    }catch(error) {
+      setNotification({
+        message: 'Singout failed. Please try again.',
+        color: 'danger',
+      });
+    }
+  };
+
   useEffect(() => {
     updateUserDocument(user, { photoURL: photoUrl });
   }, [photoUrl, user])
 
   return (
     <IonPage className="account">
+      <Header name="Account"/>
       <IonContent>
         <IonGrid className="account__grid">
           <IonRow className="account__title">
@@ -118,6 +135,13 @@ const Account: React.FC = () => {
           </IonRow>
           <IonRow className="account__title">
             <IonText>Theme</IonText>
+            {/* TODO: */}
+          </IonRow>
+          <IonRow className="account__title">
+            <IonText>Log out</IonText>
+          </IonRow>
+          <IonRow className="account__title">
+            <Button name="logout" onClickHandler={onPressLogoutHandler} />
           </IonRow>
         </IonGrid>
       </IonContent>
