@@ -100,10 +100,10 @@ export const updateUserDocument = async (user: any, additionalInfo: any) => {
         favoriteCuisines: array,
       }
     } else if (additionalInfo.favoriteChiefs) {
-      const array = [...additionalInfo.favoriteCuisines];
+      const array = [...additionalInfo.favoriteChiefs];
 
       newData = {
-        favoriteCuisines: array,
+        favoriteChiefs: array,
       }
     }
 
@@ -129,10 +129,14 @@ export const signInWithEmailAndPasswordHandler = (email: any, password: any) => 
   });
 };
 
-// TODO
 // sign out user
-// delete user
+export const signOutHandler = () => {
+  auth.signOut().then(() => console.log('logged out')).catch(error => {
+    console.error('Error signing out', error);
+  });;
+}
 
+// delete user
 export const uploadImage = async (file: any, currentUserId: string) => {
   const storageRef = storage
     .ref('users')
