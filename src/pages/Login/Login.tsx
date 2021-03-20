@@ -27,7 +27,7 @@ const Login: React.FC<RouteComponentProps> = () => {
   const [confirmPasswordLabel, setConfirmPasswordLabel] = useState<string>('confirm password');
   const [confirmPasswordLabelColor, setConfirmPasswordLabelColor] = useState<string>('primary');
 
-  const { notification, setNotification } = useNotificationContext();
+  const { setNotification } = useNotificationContext();
 
   const validateInput = (form: string, email: any, password: any, confirmPassword: any) => {
     const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

@@ -18,10 +18,10 @@ const Account: React.FC = () => {
   const user = useContext(UserContext);
   const [photoUrl, setPhotoUrl] = useState<any>(user?.photoURL ? user.photoURL
     : 'https://firebasestorage.googleapis.com/v0/b/ionic-recipes-6daa6.appspot.com/o/users%2Fdefault-user-image.png?alt=media&token=7963c406-089f-444e-9262-f22b1524fe45');
-  const [firstName, setFirstName] = useState<string>(user.firstName);
-  const [secondName, setSecondName] = useState<string>(user.secondName);
-  const [selectedCuisines, setSelectedCuisines] = useState<string[]>(user.favoriteCuisines);
-  const { notification, setNotification } = useNotificationContext();
+  const [firstName, setFirstName] = useState<string | null>(user?.firstName);
+  const [secondName, setSecondName] = useState<string | null>(user?.secondName);
+  const [selectedCuisines, setSelectedCuisines] = useState<string[] | null>(user?.favoriteCuisines);
+  const { setNotification } = useNotificationContext();
   const history = useHistory();
 
   const { takePhoto } = usePhotoGallery();
@@ -67,10 +67,11 @@ const Account: React.FC = () => {
 
   const onPressLogoutHandler = async () => {
     try {
+      // firebase sign out
       signOutHandler();
-      // console.log(history);
-      // history.push('/login');
-    }catch(error) {
+
+      history.push('/login'); // TODO: not working
+    } catch (error) {
       setNotification({
         message: 'Singout failed. Please try again.',
         color: 'danger',
@@ -80,11 +81,11 @@ const Account: React.FC = () => {
 
   useEffect(() => {
     updateUserDocument(user, { photoURL: photoUrl });
-  }, [photoUrl, user])
+  }, [photoUrl, user]);
 
   return (
     <IonPage className="account">
-      <Header name="Account"/>
+      <Header name="Account" />
       <IonContent>
         <IonGrid className="account__grid">
           <IonRow className="account__title">

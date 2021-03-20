@@ -137,7 +137,6 @@ export const signOutHandler = () => {
 }
 
 // delete user
-
 export const uploadImage = async (file: any, currentUserId: string) => {
   const storageRef = storage
     .ref('users')

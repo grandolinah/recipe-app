@@ -62,7 +62,7 @@ const App: React.FC = () => {
   const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    auth.onAuthStateChanged(async userAuth => {
+    const unlisten = auth.onAuthStateChanged(async userAuth => {
       const user = await generateUserDocument(userAuth);
 
       if (user) {
@@ -85,6 +85,10 @@ const App: React.FC = () => {
       }
 
       setIsLoaded(true);
+
+      return () => {
+        unlisten();
+      }
     });
   }, [isAuth]);
 
@@ -107,42 +111,43 @@ const App: React.FC = () => {
               message={notification.message}
               duration={2000}
               color={notification.color}
+              position="middle"
             />
           ) : null}
 
           {!isLoaded ? (
             <Loading />
           ) : (
-              <IonReactRouter>
-                {isAuth ? (
-                  <IonRouterOutlet>
-                    <ProtectedRoute path={urls.ONBOARDING} component={Onboarding} isAuth={isAuth} />
-                    <ProtectedRoute path={urls.APP} component={Tab} isAuth={isAuth} />
-                    <Route exact path="/" render={() => {
-                      if (isAuth && !isOnboarded) {
-                        return <Redirect to={urls.ONBOARDING} />
-                      } else if (isAuth && isOnboarded) {
-                        return <Redirect to={urls.APP} />
-                      }
-                    }} />
-                    <Route exact path={urls.LOGIN} render={() => {
-                      if (!isOnboarded) {
-                        return <Redirect to={urls.ONBOARDING} />
-                      } else {
-                        return <Redirect to={urls.APP} />
-                      }
-                    }} />
-                  </IonRouterOutlet>
-                ) : (
-                    <IonRouterOutlet>
-                      <Route path={urls.LOGIN} component={Login} exact={true} />
-                      <Route exact path="/" render={() => {
-                        return <Redirect to={urls.LOGIN} />
-                      }} />
-                    </IonRouterOutlet>
-                  )}
-              </IonReactRouter>
-            )}
+            <IonReactRouter>
+              {isAuth ? (
+                <IonRouterOutlet>
+                  <ProtectedRoute path={urls.ONBOARDING} component={Onboarding} isAuth={isAuth} />
+                  <ProtectedRoute path={urls.APP} component={Tab} isAuth={isAuth} />
+                  <Route exact path="/" render={() => {
+                    if (isAuth && !isOnboarded) {
+                      return <Redirect to={urls.ONBOARDING} />
+                    } else if (isAuth && isOnboarded) {
+                      return <Redirect to={urls.APP} />
+                    }
+                  }} />
+                  <Route exact path={urls.LOGIN} render={() => {
+                    if (!isOnboarded) {
+                      return <Redirect to={urls.ONBOARDING} />
+                    } else {
+                      return <Redirect to={urls.APP} />
+                    }
+                  }} />
+                </IonRouterOutlet>
+              ) : (
+                <IonRouterOutlet>
+                  <Route path={urls.LOGIN} component={Login} exact={true} />
+                  <Route exact path="/" render={() => {
+                    return <Redirect to={urls.LOGIN} />
+                  }} />
+                </IonRouterOutlet>
+              )}
+            </IonReactRouter>
+          )}
         </IonApp>
       </UserContext.Provider>
     </NotificationContext.Provider>
