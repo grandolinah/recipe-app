@@ -1,20 +1,28 @@
 import React from 'react';
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet } from '@ionic/react';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, useLocation } from 'react-router-dom';
 import { addOutline, personCircle, peopleCircle, nutrition } from 'ionicons/icons';
 
 import Home from '../../pages/Home/Home';
 import Chiefs from '../../pages/Chiefs/Chiefs';
 import Recipes from '../../pages/Recipes/Recipes';
+import RecipeDetails from '../../pages/RecipeDetails/RecipeDetails';
 import Account from '../../pages/Account/Account';
 
 const Tab: React.FC = () => {
+  const location = useLocation();
+
+  React.useEffect(() => {
+    console.log("pageview", location.pathname);
+  }, [location]);
+
   return (
     <IonTabs>
       <IonRouterOutlet>
         <Route path="/app/home" component={Home} exact={true} />
         <Route path="/app/chiefs" component={Chiefs} />
         <Route path="/app/recipes" component={Recipes} />
+        <Route path="/app/recipes/details/:id" component={RecipeDetails} />
         <Route path="/app/account" component={Account} />
         <Route path="/app" render={() => <Redirect to="/app/home" />} exact={true} />
       </IonRouterOutlet>

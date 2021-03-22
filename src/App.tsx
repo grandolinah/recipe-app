@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, useHistory, useLocation } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, IonToast } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
@@ -60,7 +60,6 @@ const App: React.FC = () => {
   const [isOnboarded, setIsOnboarded] = useState<boolean>(false);
 
   const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
-
   useEffect(() => {
     const unlisten = auth.onAuthStateChanged(async userAuth => {
       const user = await generateUserDocument(userAuth);
