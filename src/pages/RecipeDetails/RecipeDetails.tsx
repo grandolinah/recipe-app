@@ -12,18 +12,20 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({match, history}) => {
   const { id } = match.params;
 
   // TODO: get data by id in the database
-  console.log(id);
+  // console.log(id);
 
   const title = '';
   const author = '';
   const image = '';
   const description = '';
+  const products = [''];
+  const steps = [''];
 
   return (
     <IonPage>
       <IonContent>
         {id}
-        {/* <IonGrid>
+        <IonGrid>
           <IonRow>
             <IonTitle>{title}</IonTitle>
             <IonTitle size="small">by {author}</IonTitle>
@@ -33,27 +35,27 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({match, history}) => {
           </IonRow>
           <IonRow>
             Products:
-          {products.map((product: any) => {
+          {/* {products.map((product: any) => {
             return (
               <IonItem className="ion-activated">
                 <IonIcon icon={pin} slot="start" />
                 {product.item} - {product.quantity}
               </IonItem>
             )
-          })}
+          })} */}
           </IonRow>
           <IonRow>
             {description}
-            {steps.map((step: string, index: number) => {
+            {/* {steps.map((step: string, index: number) => {
               return (
                 <IonItem className="ion-activated">
                   <IonIcon icon={pin} slot="start" />
                   {index + 1}. {step}
                 </IonItem>
               )
-            })}
+            })} */}
           </IonRow>
-        </IonGrid> */}
+        </IonGrid>
       </IonContent>
     </IonPage>
   );

@@ -13,16 +13,12 @@ export type RecipeItem = {
 }
 
 const RecipeItem = ({ title, image, products, video, author, steps, description, onClickHandler }: RecipeItem) => {
-  let limitedDescription = description.split('').slice(0, 120);
+  // let limitedDescription = description?.split('').slice(0, 120);
 
-  // add ... if the description is too long
-  if (limitedDescription.length < description.length) {
-    limitedDescription.push('...');
-  }
-
-  const recipeData = {
-    title, image, products, video, author, steps, description
-  };
+  // // add ... if the description is too long
+  // if (limitedDescription?.length < description.length) {
+  //   limitedDescription.push('...');
+  // }
 
   return (
     <IonCard>
@@ -32,7 +28,8 @@ const RecipeItem = ({ title, image, products, video, author, steps, description,
       </IonCardHeader>
       <IonImg src={image} />
       <IonCardContent>
-        {limitedDescription}
+        {description}
+        {/* {limitedDescription} */}
       </IonCardContent>
       <IonButton
         size="small"

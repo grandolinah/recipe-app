@@ -187,3 +187,36 @@ export const uploadImage = async (file: any, currentUserId: string) => {
       });
   })
 };
+
+// Recipes
+export const getAllRecipes = async () => {
+  try {
+    const recipes: { id: string; video: any; image: any; title: any; userID: any; steps: any; products: any; }[] = [];
+
+    await firestore.collection("recipe").get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+
+        const newObject = {
+          id: doc.id,
+          video: data.video,
+          image: data.image,
+          title: data.title,
+          userID: data.userId,
+          steps: data.steps, 
+          products: data.products
+        };
+
+        recipes.push(newObject);
+      });
+    });
+
+    return {
+      recipes,
+    };
+  } catch (error) {
+    console.error('Error fetching recipes', error);
+  }
+};
+
+// TODO: get only my recipes
