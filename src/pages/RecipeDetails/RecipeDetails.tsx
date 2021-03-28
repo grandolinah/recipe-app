@@ -1,8 +1,11 @@
-import React from 'react';
-import { IonContent, IonGrid, IonPage, IonRow, IonImg, IonItem, IonIcon, IonTitle } from '@ionic/react';
+import React, { useState, useEffect } from 'react';
+import { IonContent, IonGrid, IonPage, IonRow, IonImg, IonItem, IonIcon, IonTitle, IonBackButton } from '@ionic/react';
 import { RouteComponentProps } from 'react-router';
 import { pin } from 'ionicons/icons';
 
+import Header from '../../components/Header/Header';
+
+import { getRecipe } from '../../services/firebase-service';
 
 interface RecipeDetailsProps extends RouteComponentProps <{
   id: string;
@@ -10,23 +13,35 @@ interface RecipeDetailsProps extends RouteComponentProps <{
 
 const RecipeDetails: React.FC<RecipeDetailsProps> = ({match, history}) => {
   const { id } = match.params;
+  const [recipe, setRecipe] = useState<any>();
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
-  // TODO: get data by id in the database
-  // console.log(id);
+  useEffect(() => {
+    const unlisten = async () => {
+      const recipe = await getRecipe(id);
 
-  const title = '';
-  const author = '';
-  const image = '';
-  const description = '';
-  const products = [''];
-  const steps = [''];
+      if (recipe) {
+        setRecipe(recipe);
+        setIsLoaded(true);
+      }
+    };
+
+    console.log(recipe);
+    return () => {
+      unlisten();
+    }
+    
+  });
+
 
   return (
     <IonPage>
+      <Header name={recipe ? recipe.title : 'missiong'} />
       <IonContent>
+        <IonBackButton />
         {id}
         <IonGrid>
-          <IonRow>
+          {/* <IonRow>
             <IonTitle>{title}</IonTitle>
             <IonTitle size="small">by {author}</IonTitle>
           </IonRow>
@@ -34,7 +49,7 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({match, history}) => {
             <IonImg src={image} />
           </IonRow>
           <IonRow>
-            Products:
+            Products: */}
           {/* {products.map((product: any) => {
             return (
               <IonItem className="ion-activated">
@@ -43,9 +58,9 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({match, history}) => {
               </IonItem>
             )
           })} */}
-          </IonRow>
+          {/* </IonRow>
           <IonRow>
-            {description}
+            {description} */}
             {/* {steps.map((step: string, index: number) => {
               return (
                 <IonItem className="ion-activated">
@@ -54,7 +69,7 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({match, history}) => {
                 </IonItem>
               )
             })} */}
-          </IonRow>
+          {/* </IonRow>*/}
         </IonGrid>
       </IonContent>
     </IonPage>

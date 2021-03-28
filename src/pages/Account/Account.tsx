@@ -85,7 +85,7 @@ const Account: React.FC = () => {
 
   return (
     <IonPage className="account">
-      <Header name="Account" />
+      <Header name="My account" />
       <IonContent>
         <IonGrid className="account__grid">
           <IonRow className="account__title">

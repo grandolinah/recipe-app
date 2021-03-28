@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { IonPage, IonContent, IonText } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
+// import { v4 as uuid } from 'uuid';
 
 import { getAllRecipes } from '../../services/firebase-service';
 
+import useIsMounted from '../../hooks/useIsMountedRef';
+
+import Header from '../../components/Header/Header';
 import RecipeItem from '../../components/RecipeItem/RecipeItem';
 
 // TODO: get all/or user`s recipes in the database
@@ -11,6 +15,8 @@ import RecipeItem from '../../components/RecipeItem/RecipeItem';
 const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
   const [recipes, setRecipes] = useState<any>();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const isMountedRef = useIsMounted();
+
 
   useEffect(() => {
     const unlisten = async () => {
@@ -23,18 +29,21 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
     };
 
     return () => {
-      unlisten();
+      unlisten()
     }
   });
 
   return (
     <IonPage>
+      <Header name="Recipes" />
       <IonContent>
         {isLoaded ? (
           recipes ? (
-            recipes.map((item: any) => {
+            recipes.map((item: any, index: number) => {
               return (
                 <RecipeItem
+                  // key={uuid()}
+                  key={index + 1}
                   title={item.title}
                   products={item.products}
                   image={item.image}

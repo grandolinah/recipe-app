@@ -1,7 +1,8 @@
-import { IonContent, IonHeader, IonPage, IonGrid, IonCol, IonItem, IonLabel, IonInput, IonRow, IonButton, IonModal } from '@ionic/react';
 import React, { useState, useRef } from 'react';
-import { arrowForwardOutline } from 'ionicons/icons';
+import { IonContent, IonPage, IonGrid, IonCol, IonItem, IonLabel, IonInput, IonRow, IonButton, IonModal } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
+import { arrowForwardOutline } from 'ionicons/icons';
+
 import { createUserWithEmailAndPassword, signInWithEmailAndPasswordHandler } from '../../services/firebase-service';
 
 import Button from '../../components/Button/Button';
@@ -161,9 +162,7 @@ const Login: React.FC<RouteComponentProps> = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <Header name="Login" />
-      </IonHeader>
+      <Header name="Login" />
       <IonContent className="ion-padding home-page">
         <IonGrid className="home-page__grid">
           <IonRow>

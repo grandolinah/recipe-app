@@ -193,7 +193,7 @@ export const getAllRecipes = async () => {
   try {
     const recipes: { id: string; video: any; image: any; title: any; userID: any; steps: any; products: any; }[] = [];
 
-    await firestore.collection("recipe").get().then((querySnapshot) => {
+    await firestore.collection('recipe').get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         const data = doc.data();
 
@@ -203,7 +203,7 @@ export const getAllRecipes = async () => {
           image: data.image,
           title: data.title,
           userID: data.userId,
-          steps: data.steps, 
+          steps: data.steps,
           products: data.products
         };
 
@@ -216,6 +216,21 @@ export const getAllRecipes = async () => {
     };
   } catch (error) {
     console.error('Error fetching recipes', error);
+  }
+};
+
+
+// Recipe by id
+export const getRecipe = async (id: string) => {
+  try {
+    const recipeDocument = await firestore.doc(`recipes/${id}`).get();
+
+    return {
+      id,
+      ...recipeDocument.data()
+    };
+  } catch (error) {
+    console.error('Error fetching recipe', error);
   }
 };
 
