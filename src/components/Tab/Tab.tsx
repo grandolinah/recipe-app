@@ -20,9 +20,9 @@ const Tab: React.FC = () => {
     <IonTabs>
       <IonRouterOutlet>
         <Route path="/app/home" component={Home} exact={true} />
-        <Route path="/app/chiefs" component={Chiefs} />
-        <Route path="/app/recipes" component={Recipes} />
-        <Route path="/app/recipes/details/:id" component={RecipeDetails} />
+        <Route path="/app/chiefs" component={Chiefs} exact={true} />
+        <Route path="/app/recipes" component={Recipes} exact={true} />
+        <Route path="/app/recipes/details/:id" component={RecipeDetails} exact={true} />
         <Route path="/app/account" component={Account} />
         <Route path="/app" render={() => <Redirect to="/app/home" />} exact={true} />
       </IonRouterOutlet>
