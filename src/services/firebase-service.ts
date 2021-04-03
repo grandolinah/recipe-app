@@ -204,7 +204,8 @@ export const getAllRecipes = async () => {
           title: data.title,
           userID: data.userId,
           steps: data.steps,
-          products: data.products
+          products: data.products,
+          description: data.description,
         };
 
         recipes.push(newObject);
@@ -237,7 +238,8 @@ export const getRecipe = async (id: string) => {
             title: data.title,
             userID: data.userId,
             steps: data.steps,
-            products: data.products
+            products: data.products,
+            description: data.description,
           };
         }
       });

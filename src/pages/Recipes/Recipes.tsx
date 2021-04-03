@@ -15,8 +15,6 @@ import RecipeItem from '../../components/RecipeItem/RecipeItem';
 const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
   const [recipes, setRecipes] = useState<any>();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const isMountedRef = useIsMounted();
-
 
   useEffect(() => {
     const unlisten = async () => {

@@ -23,7 +23,7 @@ const Tab: React.FC = () => {
         <Route path="/app/chiefs" component={Chiefs} exact={true} />
         <Route path="/app/recipes" component={Recipes} exact={true} />
         <Route path="/app/recipes/details/:id" component={RecipeDetails} exact={true} />
-        <Route path="/app/account" component={Account} />
+        <Route path="/app/account" component={Account} exact={true} />
         <Route path="/app" render={() => <Redirect to="/app/home" />} exact={true} />
       </IonRouterOutlet>
       <IonTabBar slot="bottom">
