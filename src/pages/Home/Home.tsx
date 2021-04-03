@@ -1,18 +1,66 @@
-import React  from 'react';
-import { IonPage, IonTitle, IonContent, IonGrid, IonRow } from '@ionic/react';
+import React, { useEffect, useState } from 'react';
+import { IonPage, IonContent, IonText } from '@ionic/react';
+import { RouteComponentProps } from 'react-router-dom';
+// import { v4 as uuid } from 'uuid';
+
+import { getAllRecipes } from '../../services/firebase-service';
 
 import Header from '../../components/Header/Header';
+import RecipeItem from '../../components/RecipeItem/RecipeItem';
 
-const Home: React.FC = () => {
+// TODO: get all/or user`s recipes in the database
+
+const Home: React.FC<RouteComponentProps> = ({ history }) => {
+  const [recipes, setRecipes] = useState<any>();
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
+  useEffect(() => {
+    const unlisten = async () => {
+      if (!isLoaded) {
+        const allRecipes = await getAllRecipes();
+  
+        if (allRecipes?.recipes) {
+          setRecipes(allRecipes.recipes);
+          setIsLoaded(true);
+        }
+      }
+    };
+
+    return () => {
+      unlisten()
+    }
+  });
+
   return (
     <IonPage>
-      <Header name="Home" />
+      <Header name="Recipes" />
       <IonContent>
-        <IonGrid>
-          <IonRow>
-            <IonTitle>Home</IonTitle>
-          </IonRow>
-        </IonGrid>
+        {isLoaded ? (
+          recipes ? (
+            recipes.map((item: any, index: number) => {
+              return (
+                <RecipeItem
+                  // key={uuid()}
+                  key={index + 1}
+                  title={item.title}
+                  products={item.products}
+                  image={item.image}
+                  video={item.video}
+                  author={item.userId}
+                  steps={item.steps}
+                  description={item.description}
+                  onClickHandler={() => {
+                    history.push(`/app/recipes/details/${item.id}`);
+                  }}
+                />
+              );
+            })
+          ) : (
+            <IonText>no recipes</IonText>
+          )
+        ) : (
+          <IonText>loading</IonText>
+        )}
       </IonContent>
     </IonPage>
   );

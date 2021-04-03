@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { IonPage, IonContent, IonText } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 // import { v4 as uuid } from 'uuid';
 
-import { getAllRecipes } from '../../services/firebase-service';
+import { getUserRecipes } from '../../services/firebase-service';
 
-import useIsMounted from '../../hooks/useIsMountedRef';
+import { UserContext } from '../../context/UserContext';
 
 import Header from '../../components/Header/Header';
 import RecipeItem from '../../components/RecipeItem/RecipeItem';
@@ -15,11 +15,12 @@ import RecipeItem from '../../components/RecipeItem/RecipeItem';
 const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
   const [recipes, setRecipes] = useState<any>();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const user = useContext(UserContext);
 
   useEffect(() => {
     const unlisten = async () => {
       if (!isLoaded) {
-        const allRecipes = await getAllRecipes();
+        const allRecipes = await getUserRecipes(user.uid);
   
         if (allRecipes?.recipes) {
           setRecipes(allRecipes.recipes);

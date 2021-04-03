@@ -253,4 +253,34 @@ export const getRecipe = async (id: string) => {
   }
 };
 
-// TODO: get only my recipes
+export const getUserRecipes = async (userId: string) => {
+  const recipes: { id: string; video: any; image: any; title: any; userID: any; steps: any; products: any; }[] = []
+  try {
+    await firestore.collection('recipe').get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+
+        if (data.userId === userId) {
+          const recipe = {
+            id: doc.id,
+            video: data.video,
+            image: data.image,
+            title: data.title,
+            userID: data.userId,
+            steps: data.steps,
+            products: data.products,
+            description: data.description,
+          };
+
+          recipes.push(recipe);
+        }
+      });
+    });
+
+    return {
+      recipes,
+    };
+  } catch (error) {
+    console.error('Error fetching recipe', error);
+  }
+};

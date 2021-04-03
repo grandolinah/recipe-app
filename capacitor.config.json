@@ -11,9 +11,10 @@
   },
   "cordova": {},
   "server": {
-    "url": "http://192.168.1.26:8100",
+    "url": "http://localhost:8100",
     "cleartext": true,
-    "originalUrl": "http://192.168.1.26:8101",
+    "originalUrl": "http://192.168.1.26:8100",
     "originalCleartext": true
-  }
+  },
+  "linuxAndroidStudioPath": "/usr/local/android-studio/bin/studio.sh"
 }
