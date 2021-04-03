@@ -222,12 +222,29 @@ export const getAllRecipes = async () => {
 
 // Recipe by id
 export const getRecipe = async (id: string) => {
+  let recipe = null;
+
   try {
-    const recipeDocument = await firestore.doc(`recipes/${id}`).get();
+    await firestore.collection('recipe').get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        if (doc.id === id) {
+          const data = doc.data();
+
+          recipe = {
+            id: doc.id,
+            video: data.video,
+            image: data.image,
+            title: data.title,
+            userID: data.userId,
+            steps: data.steps,
+            products: data.products
+          };
+        }
+      });
+    });
 
     return {
-      id,
-      ...recipeDocument.data()
+      recipe,
     };
   } catch (error) {
     console.error('Error fetching recipe', error);

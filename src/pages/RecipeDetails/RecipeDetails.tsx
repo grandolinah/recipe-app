@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { IonContent, IonGrid, IonPage, IonRow, IonImg, IonItem, IonIcon, IonTitle, IonBackButton } from '@ionic/react';
+import { IonContent, IonGrid, IonPage, IonRow, IonImg, IonItem, IonIcon, IonTitle, IonBackButton,
+  IonSpinner, IonToolbar, IonButtons } from '@ionic/react';
 import { RouteComponentProps } from 'react-router';
 import { pin } from 'ionicons/icons';
 
@@ -11,66 +12,77 @@ interface RecipeDetailsProps extends RouteComponentProps <{
   id: string;
 }> {}
 
+interface Recipe {
+  id: string;
+  video: string;
+  image: string;
+  title: string;
+  userId: string;
+  steps: any;
+  products: any
+}
+
 const RecipeDetails: React.FC<RecipeDetailsProps> = ({match, history}) => {
   const { id } = match.params;
-  const [recipe, setRecipe] = useState<any>();
+  const [recipe, setRecipe] = useState<Recipe | any>(null);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   useEffect(() => {
     const unlisten = async () => {
-      const recipe = await getRecipe(id);
+      if (!isLoaded) {
+        const recipeById = await getRecipe(id);
 
-      if (recipe) {
-        setRecipe(recipe);
-        setIsLoaded(true);
+        if (recipeById) {
+          setRecipe(recipeById.recipe);
+          setIsLoaded(true);
+        }
       }
     };
 
-    console.log(recipe);
     return () => {
       unlisten();
     }
-    
   });
-
 
   return (
     <IonPage>
-      <Header name={recipe ? recipe.title : 'missiong'} />
+      <Header name={recipe ? recipe.title : 'missing'} backButton />
       <IonContent>
-        <IonBackButton />
-        {id}
+        {recipe ? (
         <IonGrid>
-          {/* <IonRow>
-            <IonTitle>{title}</IonTitle>
-            <IonTitle size="small">by {author}</IonTitle>
+          <IonRow>
+            <IonTitle size="small">{recipe.title} by {recipe.userID}</IonTitle>
           </IonRow>
           <IonRow>
-            <IonImg src={image} />
+            <IonImg src={recipe.image} />
           </IonRow>
           <IonRow>
-            Products: */}
-          {/* {products.map((product: any) => {
+            Products:
+          {recipe.products.map((product: any, index: number) => {
             return (
-              <IonItem className="ion-activated">
+              <IonItem className="ion-activated" key={index}>
                 <IonIcon icon={pin} slot="start" />
                 {product.item} - {product.quantity}
               </IonItem>
             )
-          })} */}
-          {/* </IonRow>
+          })}
+          </IonRow>
           <IonRow>
-            {description} */}
-            {/* {steps.map((step: string, index: number) => {
+            {recipe.description}
+            {recipe.steps.map((step: string, index: number) => {
               return (
-                <IonItem className="ion-activated">
+                <IonItem className="ion-activated" key={index}>
                   <IonIcon icon={pin} slot="start" />
                   {index + 1}. {step}
                 </IonItem>
               )
-            })} */}
-          {/* </IonRow>*/}
-        </IonGrid>
+            })}
+          </IonRow>
+         </IonGrid>
+        ) : (
+          // Todo make component
+          <IonSpinner name="circles" color={"primary"}/>
+        )}
       </IonContent>
     </IonPage>
   );

@@ -17,8 +17,6 @@ import Login from './pages/Login/Login';
 import Onboarding from './pages/Onbording/Onboarding';
 import Tab from './components/Tab/Tab';
 
-import './styles/App.scss';
-
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
 
@@ -37,6 +35,8 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.scss';
+
+import './styles/App.scss';
 
 export interface UserInterface {
   uid: string;
