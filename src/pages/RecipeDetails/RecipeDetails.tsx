@@ -13,7 +13,7 @@ import {
 import { RouteComponentProps } from "react-router";
 
 import Header from "../../components/Header/Header";
-
+import Button from "../../components/Button/Button";
 import { getRecipe } from "../../services/firebase-service";
 
 import "./RecipeDetails.scss";
@@ -65,6 +65,7 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({ match, history }) => {
   return (
     <IonPage>
       <Header name={recipe ? recipe.title : "Loading"} backButton />
+      <Button name="Back" onClickHandler={() => history.goBack()} />
       <IonContent>
         {recipe ? (
           <IonGrid className="recipe-detail">

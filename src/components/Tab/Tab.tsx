@@ -8,6 +8,7 @@ import Chiefs from '../../pages/Chiefs/Chiefs';
 import Recipes from '../../pages/Recipes/Recipes';
 import RecipeDetails from '../../pages/RecipeDetails/RecipeDetails';
 import Account from '../../pages/Account/Account';
+import CreateRecipe from '../../pages/CreateRecipe/CreateRecipe';
 
 const Tab: React.FC = () => {
   const location = useLocation();
@@ -20,9 +21,10 @@ const Tab: React.FC = () => {
     <IonTabs>
       <IonRouterOutlet>
         <Route path="/app/home" component={Home} exact={true} />
+        <Route path="/app/home/details/:id" component={RecipeDetails} exact={true} />
         <Route path="/app/chiefs" component={Chiefs} exact={true} />
         <Route path="/app/recipes" component={Recipes} exact={true} />
-        <Route path="/app/recipes/details/:id" component={RecipeDetails} exact={true} />
+        <Route path="/app/recipes/create" component={CreateRecipe} exact={true} />
         <Route path="/app/account" component={Account} exact={true} />
         <Route path="/app" render={() => <Redirect to="/app/home" />} exact={true} />
       </IonRouterOutlet>

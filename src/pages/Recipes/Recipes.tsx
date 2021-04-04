@@ -8,6 +8,7 @@ import { getUserRecipes } from '../../services/firebase-service';
 import { UserContext } from '../../context/UserContext';
 
 import Header from '../../components/Header/Header';
+import Button from '../../components/Button/Button';
 import RecipeItem from '../../components/RecipeItem/RecipeItem';
 
 // TODO: get all/or user`s recipes in the database
@@ -16,6 +17,8 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
   const [recipes, setRecipes] = useState<any>();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const user = useContext(UserContext);
+
+  console.log(recipes);
 
   useEffect(() => {
     const unlisten = async () => {
@@ -38,6 +41,7 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
     <IonPage>
       <Header name="Recipes" />
       <IonContent>
+        <Button name="Create new recipe" onClickHandler={() => history.push('/app/recipes/create')} />
         {isLoaded ? (
           recipes ? (
             recipes.map((item: any, index: number) => {
@@ -53,7 +57,7 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
                   steps={item.steps}
                   description={item.description}
                   onClickHandler={() => {
-                    history.push(`/app/recipes/details/${item.id}`);
+                    history.push(`/app/home/details/${item.id}`);
                   }}
                 />
               );

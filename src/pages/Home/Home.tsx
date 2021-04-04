@@ -50,7 +50,7 @@ const Home: React.FC<RouteComponentProps> = ({ history }) => {
                   steps={item.steps}
                   description={item.description}
                   onClickHandler={() => {
-                    history.push(`/app/recipes/details/${item.id}`);
+                    history.push(`/app/home/details/${item.id}`);
                   }}
                 />
               );
