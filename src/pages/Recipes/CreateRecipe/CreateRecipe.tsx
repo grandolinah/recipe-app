@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { RouteComponentProps } from "react-router";
 import {
   IonItemDivider,
@@ -8,10 +8,10 @@ import {
   IonInput,
   IonLabel,
   IonImg,
+  IonContent,
   IonTextarea,
   IonList,
   IonItem,
-  IonTitle,
   IonAvatar,
 } from "@ionic/react";
 
@@ -51,11 +51,16 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
     "https://massageatworkusa.com/wp-content/uploads/2020/08/shutterstock_461827699.jpg"
   );
   const [title, setTitle] = useState<string>("");
+  const [titleColor, setTitleColor] = useState<string>("primary");
   const [description, setDescription] = useState<string>("");
-  const [step, setStep] = useState<string | null>(null);
+  const [descriptionColor, setDescriptionColor] = useState<string>("primary");
+  const [step, setStep] = useState<string>();
+  const [stepColor, setStepColor] = useState<string>("primary");
   const [steps, setSteps] = useState<any>([]);
   const [product, setProduct] = useState<string>("");
+  const [productColor, setProductColor] = useState<string>("primary");
   const [quantity, setQuantity] = useState<string>("");
+  const [quantityColor, setQuantityColor] = useState<string>("primary");
   const [products, setProducts] = useState<any[]>([]);
 
   // TODO: clear input after add step or product
@@ -78,23 +83,97 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
   };
 
   const addStep = () => {
-    setSteps([...steps, step]);
+    if (step === "") {
+      setNotification({
+        message: "Your need to fill step",
+        color: "danger",
+      });
+    } else {
+      setSteps([...steps, step]);
 
-    setStep('');
+      setStep("");
+    }
   };
 
-
   const addProduct = () => {
-    setProducts([
-      ...products,
-      {
-        item: product,
-        quantity: quantity,
-      },
-    ]);
+    const notification = [];
+    if (product === "" && quantity === "") {
+      notification.push("product and quantity");
+    } else if (product === "") {
+      notification.push("product");
+    } else if (quantity === "") {
+      notification.push("quantity");
+    }
 
-    setProduct('');
-    setQuantity('');
+    if (notification.length > 0) {
+      setNotification({
+        message: `Your need to fill ${notification.join(", ")}`,
+        color: "danger",
+      });
+    } else {
+      setProducts([
+        ...products,
+        {
+          item: product,
+          quantity: quantity,
+        },
+      ]);
+
+      setProduct("");
+      setQuantity("");
+    }
+  };
+
+  const validateInput = (data: Recipe) => {
+    const notification = [];
+
+    if (data.title === "") {
+      setTitleColor("danger");
+      notification.push("title");
+    } else {
+      setTitleColor("primary");
+    }
+
+    if (data.description === "") {
+      setDescriptionColor("danger");
+      notification.push("description");
+    } else {
+      setDescriptionColor("primary");
+    }
+
+    if (data.description === "") {
+      setDescriptionColor("danger");
+      notification.push("description");
+    } else {
+      setDescriptionColor("primary");
+    }
+
+    if (data.steps.length === 0) {
+      setStepColor("danger");
+      notification.push("steps");
+    } else {
+      setStepColor("primary");
+    }
+
+    if (data.products.length === 0) {
+      setProductColor("danger");
+      setQuantityColor("danger");
+      notification.push("products");
+    } else {
+      setProductColor("primary");
+      setQuantityColor("primary");
+    }
+
+    if (notification.length > 0) {
+      setNotification({
+        message: `Your need to fill ${notification.join(", ")}`,
+        color: "danger",
+      });
+
+      return false;
+    }
+
+    return true;
   };
 
   const addRecipe = () => {
@@ -108,11 +187,13 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
       products,
     };
 
-    // TODO: save recipe to firebase
-    console.log(newRecipe);
-  };
+    const isInputValidated = validateInput(newRecipe);
 
-  console.log(steps);
+    if (isInputValidated) {
+      // TODO: save recipe to firebase
+      console.log(newRecipe);
+    }
+  };
 
   return (
     <PageLayout name="New recipe" backButton className="create-recipe">
@@ -138,7 +219,7 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
       <IonItemDivider>
         <IonRow>
           <IonItem className="create-recipe__input">
-            <IonLabel position="floating" color="primary">
+            <IonLabel position="floating" color={titleColor}>
               title
             </IonLabel>
             <IonInput
@@ -154,7 +235,7 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
       <IonItemDivider>
         <IonRow>
           <IonItem className="create-recipe__input">
-            <IonLabel position="floating" color="primary">
+            <IonLabel position="floating" color={descriptionColor}>
               description
             </IonLabel>
             <IonTextarea
@@ -172,22 +253,22 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
         </IonText>
       </IonRow>
       <IonRow>
-          <IonList>
-            {steps.map((item: string, index: number) => (
-              <IonItem key={index}>
-                <IonText>
-                  {index + 1}. {item}
-                </IonText>
-                <Button name="x" onClickHandler={() => removeStep(index)} />
-              </IonItem>
-            ))}
-          </IonList>
-        </IonRow>
+        <IonList>
+          {steps.map((item: string, index: number) => (
+            <IonItem key={index}>
+              <IonText>
+                {index + 1}. {item}
+              </IonText>
+              <Button name="x" onClickHandler={() => removeStep(index)} />
+            </IonItem>
+          ))}
+        </IonList>
+      </IonRow>
       <IonItemDivider>
         <IonRow>
-          <IonCol size="10">
+          <IonCol size="8">
             <IonItem className="create-recipe__input">
-              <IonLabel position="floating" color="primary">
+              <IonLabel position="floating" color={stepColor}>
                 step
               </IonLabel>
               <IonInput
@@ -198,11 +279,8 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
               ></IonInput>
             </IonItem>
           </IonCol>
-          <IonCol size="2">
-            <Button
-              name="+"
-              onClickHandler={addStep}
-            />
+          <IonCol size="4">
+            <Button name="+" onClickHandler={addStep} />
           </IonCol>
         </IonRow>
       </IonItemDivider>
@@ -215,7 +293,7 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
           {products.map((item: Product, index: number) => (
             <IonItem key={index}>
               <IonText>
-                {index + 1}. {item.item} - {item.quantity}
+                {item.item} - {item.quantity}
               </IonText>
               <Button
                 name="X"
@@ -228,38 +306,34 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
 
       <IonRow>
         <IonItemDivider>
-          <IonCol size="7">
-            <IonItem className="create-recipe__input">
-              <IonLabel position="floating" color="primary">
-                product
-              </IonLabel>
-              <IonInput
-                className="input"
-                value={product}
-                clearInput
-                onIonChange={(e) => setProduct(e.detail.value!)}
-              ></IonInput>
-            </IonItem>
-          </IonCol>
-          <IonCol size="3">
-            <IonItem className="create-recipe__input">
-              <IonLabel position="floating" color="primary">
-                qty
-              </IonLabel>
-              <IonInput
-                className="input"
-                value={quantity}
-                clearInput
-                onIonChange={(e) => setQuantity(e.detail.value!)}
-              ></IonInput>
-            </IonItem>
-          </IonCol>
-          <IonCol size="2">
-            <Button
-              name="+"
-              onClickHandler={addProduct}
-            />
-        </IonCol>
+          <IonRow>
+            <IonCol size="8">
+              <IonItem className="create-recipe__input">
+                <IonLabel position="floating" color={productColor}>
+                  product
+                </IonLabel>
+                <IonInput
+                  className="input"
+                  value={product}
+                  clearInput
+                  onIonChange={(e) => setProduct(e.detail.value!)}
+                ></IonInput>
+              </IonItem>
+            </IonCol>
+            <IonCol size="4">
+              <IonItem className="create-recipe__input">
+                <IonLabel position="floating" color={quantityColor}>
+                  qty
+                </IonLabel>
+                <IonInput
+                  className="input"
+                  value={quantity}
+                  onIonChange={(e) => setQuantity(e.detail.value!)}
+                ></IonInput>
+              </IonItem>
+            </IonCol>
+          </IonRow>
+          <Button name="add" onClickHandler={addProduct} />
         </IonItemDivider>
       </IonRow>
       <IonRow className="create-recipe__create-button">
