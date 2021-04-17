@@ -12,9 +12,9 @@ import {
 } from "@ionic/react";
 import { RouteComponentProps } from "react-router";
 
-import Header from "../../components/Header/Header";
-import Button from "../../components/Button/Button";
-import { getRecipe } from "../../services/firebase-service";
+import PageLayout from "../../../layouts/PageLayout";
+import Button from "../../../components/Button/Button";
+import { getRecipe } from "../../../services/firebase-service";
 
 import "./RecipeDetails.scss";
 
@@ -63,9 +63,9 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({ match, history }) => {
 
   console.log(recipe);
   return (
-    <IonPage>
-      <Header name={recipe ? recipe.title : "Loading"} backButton />
+    <PageLayout name={recipe ? recipe.title : "Loading"} backButton>
       <Button name="Back" onClickHandler={() => history.goBack()} />
+
       <IonContent>
         {recipe ? (
           <IonGrid className="recipe-detail">
@@ -75,7 +75,9 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({ match, history }) => {
               </IonTitle>
               <IonImg src={recipe.image} className="recipe-detail__image" />
             </IonRow>
-            <IonTitle size="small" className="recipe-detail__sub-title">Products:</IonTitle>
+            <IonTitle size="small" className="recipe-detail__sub-title">
+              Products:
+            </IonTitle>
             <IonRow className="recipe-detail__products">
               <IonList>
                 {recipe.products.map((product: any, index: number) => {
@@ -91,7 +93,9 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({ match, history }) => {
             <IonRow className="recipe-detail__description">
               {recipe.description}
             </IonRow>
-            <IonTitle size="small" className="recipe-detail__sub-title">Step by step:</IonTitle>
+            <IonTitle size="small" className="recipe-detail__sub-title">
+              Step by step:
+            </IonTitle>
             <IonRow className="recipe-detail__steps">
               <IonList>
                 {recipe.steps.map((step: string, index: number) => {
@@ -108,7 +112,7 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({ match, history }) => {
           <IonSpinner name="circles" color={"primary"} />
         )}
       </IonContent>
-    </IonPage>
+    </PageLayout>
   );
 };
 

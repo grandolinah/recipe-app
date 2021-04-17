@@ -4,8 +4,6 @@ import { IonPage} from '@ionic/react';
 import OnboardingSlider from '../../containers/OnboardingSlider/OnboardingSlider';
 import Header from '../../components/Header/Header';
 
-import './Onboarding.scss';
-
 const Onboarding = () => {
   return (
     <IonPage>

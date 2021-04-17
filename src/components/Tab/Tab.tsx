@@ -6,9 +6,9 @@ import { addOutline, personCircle, peopleCircle, nutrition } from 'ionicons/icon
 import Home from '../../pages/Home/Home';
 import Chiefs from '../../pages/Chiefs/Chiefs';
 import Recipes from '../../pages/Recipes/Recipes';
-import RecipeDetails from '../../pages/RecipeDetails/RecipeDetails';
+import RecipeDetails from '../../pages/Recipes/RecipeDetails/RecipeDetails';
 import Account from '../../pages/Account/Account';
-import CreateRecipe from '../../pages/CreateRecipe/CreateRecipe';
+import CreateRecipe from '../../pages/Recipes/CreateRecipe/CreateRecipe';
 
 const Tab: React.FC = () => {
   const location = useLocation();

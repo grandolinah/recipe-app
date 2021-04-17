@@ -1,17 +1,19 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { IonPage, IonContent, IonText } from '@ionic/react';
-import { RouteComponentProps } from 'react-router-dom';
+import React, { useEffect, useState, useContext } from "react";
+import { IonRow, IonCol, IonText } from "@ionic/react";
+import { RouteComponentProps } from "react-router-dom";
 // import { v4 as uuid } from 'uuid';
 
-import { getUserRecipes } from '../../services/firebase-service';
+import { getUserRecipes } from "../../services/firebase-service";
 
-import { UserContext } from '../../context/UserContext';
+import { UserContext } from "../../context/UserContext";
 
-import Header from '../../components/Header/Header';
-import Button from '../../components/Button/Button';
-import RecipeItem from '../../components/RecipeItem/RecipeItem';
+import Button from "../../components/Button/Button";
+import PageLayout from "../../layouts/PageLayout";
+import RecipeItem from "../../components/RecipeItem/RecipeItem";
 
 // TODO: get all/or user`s recipes in the database
+
+import './Recipes.scss';
 
 const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
   const [recipes, setRecipes] = useState<any>();
@@ -24,7 +26,7 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
     const unlisten = async () => {
       if (!isLoaded) {
         const allRecipes = await getUserRecipes(user.uid);
-  
+
         if (allRecipes?.recipes) {
           setRecipes(allRecipes.recipes);
           setIsLoaded(true);
@@ -33,43 +35,46 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
     };
 
     return () => {
-      unlisten()
-    }
+      unlisten();
+    };
   });
 
   return (
-    <IonPage>
-      <Header name="Recipes" />
-      <IonContent>
-        <Button name="Create new recipe" onClickHandler={() => history.push('/app/recipes/create')} />
-        {isLoaded ? (
-          recipes ? (
-            recipes.map((item: any, index: number) => {
-              return (
-                <RecipeItem
-                  // key={uuid()}
-                  key={index + 1}
-                  title={item.title}
-                  products={item.products}
-                  image={item.image}
-                  video={item.video}
-                  author={item.userId}
-                  steps={item.steps}
-                  description={item.description}
-                  onClickHandler={() => {
-                    history.push(`/app/home/details/${item.id}`);
-                  }}
-                />
-              );
-            })
-          ) : (
-            <IonText>no recipes</IonText>
-          )
+    <PageLayout name="Recipes" className="recipes">
+      <IonRow className="recipes__button-container">
+        <Button
+          name="Create new recipe"
+          onClickHandler={() => history.push("/app/recipes/create")}
+        />
+      </IonRow>
+
+      {isLoaded ? (
+        recipes ? (
+          recipes.map((item: any, index: number) => {
+            return (
+              <RecipeItem
+                // key={uuid()}
+                key={index + 1}
+                title={item.title}
+                products={item.products}
+                image={item.image}
+                video={item.video}
+                author={item.userId}
+                steps={item.steps}
+                description={item.description}
+                onClickHandler={() => {
+                  history.push(`/app/home/details/${item.id}`);
+                }}
+              />
+            );
+          })
         ) : (
-          <IonText>loading</IonText>
-        )}
-      </IonContent>
-    </IonPage>
+          <IonText>no recipes</IonText>
+        )
+      ) : (
+        <IonText>loading</IonText>
+      )}
+    </PageLayout>
   );
 };
 

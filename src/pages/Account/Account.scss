@@ -1,16 +1,6 @@
 @import '../../styles/config/variables';
 
 .account {
-  align-items: center;
-  justify-content: center;
-
-  &__grid {
-    height: 100%;
-    padding: 16px;
-    width: 300px;
-    max-width: 90%;
-  }
-
   &__avatar-box {
     width: 300px;
     max-width: 90%;
