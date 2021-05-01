@@ -1,5 +1,13 @@
-import React from 'react';
-import { IonCard, IonCardHeader, IonImg, IonCardSubtitle, IonCardTitle, IonCardContent, IonButton } from '@ionic/react';
+import React from "react";
+import {
+  IonCard,
+  IonCardHeader,
+  IonImg,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonCardContent,
+  IonButton,
+} from "@ionic/react";
 
 export type RecipeItem = {
   title: string;
@@ -10,9 +18,24 @@ export type RecipeItem = {
   steps: any; // TODO: array with strings?
   description: string;
   onClickHandler(): void;
-}
+  authorable?: boolean;
+  onClickEditHandler?(): void;
+  onClickDeleteHandler?(): void;
+};
 
-const RecipeItem = ({ title, image, products, video, author, steps, description, onClickHandler }: RecipeItem) => {
+const RecipeItem = ({
+  title,
+  image,
+  products,
+  video,
+  author,
+  steps,
+  description,
+  onClickHandler,
+  onClickEditHandler,
+  onClickDeleteHandler,
+  authorable,
+}: RecipeItem) => {
   // let limitedDescription = description?.split('').slice(0, 120);
 
   // // add ... if the description is too long
@@ -37,9 +60,31 @@ const RecipeItem = ({ title, image, products, video, author, steps, description,
         onClick={() => {
           onClickHandler();
         }}
-        >
+      >
         Details
-      </IonButton >
+      </IonButton>
+      {authorable && onClickEditHandler && onClickDeleteHandler && (
+        <>
+          <IonButton
+            size="small"
+            expand="full"
+            onClick={() => {
+              onClickEditHandler();
+            }}
+          >
+            Edit
+          </IonButton>
+          <IonButton
+            size="small"
+            expand="full"
+            onClick={() => {
+              onClickDeleteHandler();
+            }}
+          >
+            Delete
+          </IonButton>
+        </>
+      )}
     </IonCard>
   );
 };

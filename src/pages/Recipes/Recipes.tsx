@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
-import { IonRow, IonText } from "@ionic/react";
+import { IonRow, IonText, IonSpinner, IonContent } from "@ionic/react";
 import { RouteComponentProps } from "react-router-dom";
 // import { v4 as uuid } from 'uuid';
 
-import { getUserRecipes } from "../../services/firebase-service";
+import { getUserRecipes, deleteRecipe } from "../../services/firebase-service";
 
 import { UserContext } from "../../context/UserContext";
 
@@ -12,6 +12,7 @@ import PageLayout from "../../layouts/PageLayout";
 import RecipeItem from "../../components/RecipeItem/RecipeItem";
 
 // TODO: get all/or user`s recipes in the database
+import { useNotificationContext } from '../../context/NotificationContext';
 
 import './Recipes.scss';
 
@@ -19,8 +20,7 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
   const [recipes, setRecipes] = useState<any>();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const user = useContext(UserContext);
-
-  console.log(recipes);
+  const { setNotification } = useNotificationContext();
 
   useEffect(() => {
     const unlisten = async () => {
@@ -38,6 +38,12 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
       unlisten();
     };
   });
+
+  useEffect( () => {
+    return history.listen((location) => { 
+      setIsLoaded(false);
+    }) 
+ },[history]) 
 
   return (
     <PageLayout name="Recipes" className="recipes">
@@ -65,6 +71,21 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
                 onClickHandler={() => {
                   history.push(`/app/home/details/${item.id}`);
                 }}
+                authorable
+                onClickDeleteHandler={() => {
+                  // TODO: add confirm modal
+                  deleteRecipe(item.id);
+
+                  setNotification({
+                    message: 'You deleted the recipe successfully.',
+                    color: 'primary',
+                  });
+
+                  setIsLoaded(false);
+                }}
+                onClickEditHandler={() => {
+                  // todo edit
+                }}
               />
             );
           })
@@ -72,7 +93,9 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
           <IonText>no recipes</IonText>
         )
       ) : (
-        <IonText>loading</IonText>
+        <IonContent className="spinner-wrapper">
+          <IonSpinner name="circles" color={"primary"} />
+        </IonContent>
       )}
     </PageLayout>
   );

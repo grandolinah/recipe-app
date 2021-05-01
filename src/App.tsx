@@ -60,6 +60,7 @@ const App: React.FC = () => {
   const [isOnboarded, setIsOnboarded] = useState<boolean>(false);
 
   const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
+
   useEffect(() => {
     const unlisten = auth.onAuthStateChanged(async userAuth => {
       const user = await generateUserDocument(userAuth);

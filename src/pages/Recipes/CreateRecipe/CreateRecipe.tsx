@@ -7,15 +7,11 @@ import {
   IonText,
   IonInput,
   IonLabel,
-  IonImg,
-  IonContent,
   IonTextarea,
   IonList,
   IonItem,
   IonAvatar,
 } from "@ionic/react";
-
-import { uploadImage } from "../../../services/firebase-service";
 
 import { usePhotoGallery } from "../../../hooks/usePhotoGallery";
 
@@ -39,7 +35,8 @@ interface Recipe {
   video?: string;
   image?: string;
   title: string;
-  userId?: string;
+  userId: string;
+  userName?: string;
   description: string;
   steps: string[];
   products: Product[];
@@ -185,6 +182,7 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
       image: photoUrl,
       title,
       userId: user.uid,
+      userName : `${user.firstName} ${user.secondName}`,
       description,
       steps,
       products,
@@ -195,6 +193,9 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
     if (isInputValidated) {
       createRecipe(newRecipe);
 
+      console.log(newRecipe);
+
+      // TODO: reset inputs
       history.push('/app/recipes');
     }
   };

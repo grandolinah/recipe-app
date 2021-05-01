@@ -335,7 +335,7 @@ export const getUserRecipes = async (userId: string) => {
 export const createRecipe = async (recipe: any) => {
   const recipeRef = firestore.doc(`recipes/${recipe.userId}-${recipe.title}`);
 
-  const { video, image, title, userId, description, steps, products } = recipe;
+  const { video, image, title, userId, description, steps, products, userName} = recipe;
 
   try {
     await recipeRef.set({
@@ -346,6 +346,7 @@ export const createRecipe = async (recipe: any) => {
       description,
       steps,
       products,
+      userName,
     });
 
     const videoOrImage = recipe.image || recipe.video;
@@ -413,5 +414,16 @@ export const createRecipe = async (recipe: any) => {
     }
   } catch (error) {
     console.error("Error creating user document", error);
+  }
+};
+
+// delete recipe
+export const deleteRecipe = async (recipeId: string) => {
+  const recipeRef = firestore.doc(`recipes/${recipeId}`);
+
+  try {
+    recipeRef.delete();
+  } catch(error) {
+    console.log(error);
   }
 };
