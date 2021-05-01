@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { IonRow, IonCol, IonText } from "@ionic/react";
+import { IonRow, IonText } from "@ionic/react";
 import { RouteComponentProps } from "react-router-dom";
 // import { v4 as uuid } from 'uuid';
 

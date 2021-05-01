@@ -25,6 +25,8 @@ import { useNotificationContext } from "../../../context/NotificationContext";
 import PageLayout from "../../../layouts/PageLayout";
 import Button from "../../../components/Button/Button";
 
+import { createRecipe } from '../../../services/firebase-service';
+
 import "./CreateRecipe.scss";
 
 interface Product {
@@ -67,7 +69,8 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
 
   const onClickUploadPhotoHandler = async () => {
     const base64Data = await takePhoto();
-    // TODO: save image or video
+
+    setPhotoUrl(base64Data)
   };
 
   const removeProduct = (item: string) => {
@@ -190,8 +193,9 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
     const isInputValidated = validateInput(newRecipe);
 
     if (isInputValidated) {
-      // TODO: save recipe to firebase
-      console.log(newRecipe);
+      createRecipe(newRecipe);
+
+      history.push('/app/recipes');
     }
   };
 
