@@ -1,0 +1,23 @@
+{
+  "extends": [ "airbnb", "airbnb/hooks" ],
+  "rules": {
+    "semi": 0,
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-props-no-spreading": [1, { "exceptions": ["route.component", "RouteWithSubRoutes"] }],
+    "react/require-default-props": [0],
+    "react/no-danger": [0]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src"]
+      }
+    }
+  },
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
+  "env": {
+    "browser": true
+  }
+}
