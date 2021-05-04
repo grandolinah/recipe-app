@@ -14,7 +14,7 @@ const Tab: React.FC = () => {
   const location = useLocation();
 
   React.useEffect(() => {
-    console.log("pageview", location.pathname);
+    console.log('pageview', location.pathname);
   }, [location]);
 
   return (

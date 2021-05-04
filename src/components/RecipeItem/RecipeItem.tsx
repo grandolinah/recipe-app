@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   IonCard,
   IonCardHeader,
@@ -7,7 +7,7 @@ import {
   IonCardTitle,
   IonCardContent,
   IonButton,
-} from "@ionic/react";
+} from '@ionic/react';
 
 export type RecipeItem = {
   title: string;

@@ -3,7 +3,7 @@ import { useCamera } from '@ionic/react-hooks/camera';
 import { useFilesystem, base64FromPath } from '@ionic/react-hooks/filesystem';
 import { useStorage } from '@ionic/react-hooks/storage';
 import { isPlatform } from '@ionic/react';
-import { CameraResultType, CameraSource, CameraPhoto, Capacitor, FilesystemDirectory } from "@capacitor/core";
+import { CameraResultType, CameraSource, CameraPhoto, Capacitor, FilesystemDirectory } from '@capacitor/core';
 
 const PHOTO_STORAGE = 'photos';
 
@@ -17,7 +17,7 @@ export interface PhotoInterface {
   webviewPath?: string;
 }
 
-export function usePhotoGallery() {
+const usePhotoGallery = () => {
   const { getPhoto } = useCamera();
   const { set } = useStorage();
   const { readFile, writeFile } = useFilesystem();
@@ -90,4 +90,6 @@ export function usePhotoGallery() {
     takePhoto,
     savePicture,
   };
-}
+};
+
+export default usePhotoGallery;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   IonContent,
   IonGrid,
@@ -9,14 +9,14 @@ import {
   IonItem,
   IonTitle,
   IonSpinner,
-} from "@ionic/react";
-import { RouteComponentProps } from "react-router";
+} from '@ionic/react';
+import { RouteComponentProps } from 'react-router';
 
-import PageLayout from "../../../layouts/PageLayout";
-import Button from "../../../components/Button/Button";
-import { getRecipe } from "../../../services/firebase-service";
+import PageLayout from '../../../layouts/PageLayout';
+import Button from '../../../components/Button/Button';
+import { getRecipe } from '../../../services/firebase-service';
 
-import "./RecipeDetails.scss";
+import './RecipeDetails.scss';
 
 interface RecipeDetailsProps
   extends RouteComponentProps<{
@@ -63,7 +63,7 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({ match, history }) => {
 
   console.log(recipe);
   return (
-    <PageLayout name={recipe ? recipe.title : "Loading"} backButton>
+    <PageLayout name={recipe ? recipe.title : 'Loading'} backButton>
       <Button name="Back" onClickHandler={() => history.goBack()} />
 
       <IonContent>

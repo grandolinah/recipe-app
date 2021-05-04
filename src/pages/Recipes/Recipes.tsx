@@ -1,15 +1,15 @@
-import React, { useEffect, useState, useContext } from "react";
-import { IonRow, IonText, IonSpinner, IonContent } from "@ionic/react";
-import { RouteComponentProps } from "react-router-dom";
+import React, { useEffect, useState, useContext } from 'react';
+import { IonRow, IonText, IonSpinner, IonContent } from '@ionic/react';
+import { RouteComponentProps } from 'react-router-dom';
 // import { v4 as uuid } from 'uuid';
 
-import { getUserRecipes, deleteRecipe } from "../../services/firebase-service";
+import { getUserRecipes, deleteRecipe } from '../../services/firebase-service';
 
-import { UserContext } from "../../context/UserContext";
+import { UserContext } from '../../context/UserContext';
 
-import Button from "../../components/Button/Button";
-import PageLayout from "../../layouts/PageLayout";
-import RecipeItem from "../../components/RecipeItem/RecipeItem";
+import Button from '../../components/Button/Button';
+import PageLayout from '../../layouts/PageLayout';
+import RecipeItem from '../../components/RecipeItem/RecipeItem';
 
 // TODO: get all/or user`s recipes in the database
 import { useNotificationContext } from '../../context/NotificationContext';
