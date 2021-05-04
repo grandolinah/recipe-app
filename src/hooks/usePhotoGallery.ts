@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from 'react';
 import { useCamera } from '@ionic/react-hooks/camera';
 import { useFilesystem, base64FromPath } from '@ionic/react-hooks/filesystem';
 import { useStorage } from '@ionic/react-hooks/storage';

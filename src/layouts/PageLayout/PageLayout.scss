@@ -1,0 +1,19 @@
+@import '../../styles/config/variables';
+
+.page {
+  align-items: center;
+  justify-content: center;
+
+  &__content {
+    height: 100%;
+    padding: 16px;
+    width: 300px;
+    max-width: 90%;
+  }
+
+  &__center {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}

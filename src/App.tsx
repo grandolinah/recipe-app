@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, useHistory, useLocation } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, IonToast } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
@@ -16,8 +16,6 @@ import Loading from './pages/Loading/Loading';
 import Login from './pages/Login/Login';
 import Onboarding from './pages/Onbording/Onboarding';
 import Tab from './components/Tab/Tab';
-
-import './styles/App.scss';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -37,6 +35,8 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.scss';
+
+import './styles/App.scss';
 
 export interface UserInterface {
   uid: string;

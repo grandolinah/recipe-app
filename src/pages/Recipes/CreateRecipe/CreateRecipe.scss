@@ -1,0 +1,15 @@
+.create-recipe {
+  &__info {
+    padding: 16px 0;
+  }
+
+  &__create-button {
+    display: flex;
+    justify-content: center;
+    padding: 16px 0;
+  }
+
+  &__input {
+    font-size: 14px;
+  }
+}

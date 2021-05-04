@@ -1,5 +1,5 @@
-import { IonPage, IonSpinner, IonTitle, IonContent, IonGrid, IonRow } from '@ionic/react';
 import React  from 'react';
+import { IonPage, IonSpinner, IonTitle, IonContent, IonGrid, IonRow } from '@ionic/react';
 
 import './Loading.scss';
 

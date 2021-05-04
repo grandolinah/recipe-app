@@ -1,9 +1,11 @@
-import { IonContent, IonHeader, IonPage, IonGrid, IonCol, IonItem, IonLabel, IonInput, IonRow, IonButton, IonModal } from '@ionic/react';
 import React, { useState, useRef } from 'react';
-import { arrowForwardOutline } from 'ionicons/icons';
+import { IonContent, IonPage, IonGrid, IonCol, IonItem, IonLabel, IonInput, IonRow, IonButton, IonModal } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
+import { arrowForwardOutline } from 'ionicons/icons';
+
 import { createUserWithEmailAndPassword, signInWithEmailAndPasswordHandler } from '../../services/firebase-service';
 
+import PageLayout from "../../layouts/PageLayout";
 import Button from '../../components/Button/Button';
 import Header from '../../components/Header/Header';
 
@@ -161,11 +163,9 @@ const Login: React.FC<RouteComponentProps> = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <Header name="Login" />
-      </IonHeader>
-      <IonContent className="ion-padding home-page">
-        <IonGrid className="home-page__grid">
+      <Header name="Login" />
+      <IonContent className="ion-padding login">
+        <IonGrid className="login__grid">
           <IonRow>
             <IonCol>
               <IonItem>
@@ -190,10 +190,10 @@ const Login: React.FC<RouteComponentProps> = () => {
           </IonRow>
         </IonGrid>
       </IonContent>
-      <IonModal isOpen={isModalVisible} cssClass="home-page__modal" backdropDismiss={true} swipeToClose={true}>
+      <IonModal isOpen={isModalVisible} cssClass="login__modal" backdropDismiss={true} swipeToClose={true}>
         <IonContent className="ion-padding">
-          <IonGrid className="home-page__grid">
-            <IonRow className="home-page__row" >
+          <IonGrid className="login__grid">
+            <IonRow className="login__row" >
               <IonCol>
                 <IonItem>
                   <IonLabel position="floating" color={emailLabelColor}>{emailLabel}</IonLabel>

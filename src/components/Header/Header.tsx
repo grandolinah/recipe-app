@@ -1,16 +1,22 @@
-import { IonToolbar, IonTitle } from '@ionic/react';
-import React from 'react';
+import React from "react";
+import { IonToolbar, IonTitle, IonButtons, IonBackButton } from "@ionic/react";
 
-import './Header.scss';
+import "./Header.scss";
 
-export type HeaderProps  = {
+export type HeaderProps = {
   name: string;
-}
+  backButton?: boolean;
+};
 
-const Header = ({ name }: HeaderProps) => {
+const Header = ({ name, backButton }: HeaderProps) => {
   return (
     <IonToolbar className="toolbar">
       <IonTitle className="ion-text-center toolbar__title">{name}</IonTitle>
+      {backButton && (
+        <IonButtons slot="start">
+          <IonBackButton />
+        </IonButtons>
+      )}
     </IonToolbar>
   );
 };
