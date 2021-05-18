@@ -3,7 +3,6 @@
 TODO:
 Issues:
 [Account] - when first register and go to "Account" there are no filled data after onboarding"
-[Account] - Log out redirect
 [Button][Header] - "name" change to title in Button/Header etc
 [General] - relative paths ../../
 [Recipes] - recipe details page
