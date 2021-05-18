@@ -162,7 +162,7 @@ const Login: React.FC<RouteComponentProps> = () => {
   };
 
   return (
-    <IonPage>
+    <IonPage className="login">
       <Header name="Login" />
       <IonContent className="ion-padding login">
         <IonGrid className="login__grid">
