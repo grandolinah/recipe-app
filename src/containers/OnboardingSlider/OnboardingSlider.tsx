@@ -7,7 +7,7 @@ import { useNotificationContext } from '../../context/NotificationContext';
 
 import Button from '../../components/Button/Button';
 
-import { usePhotoGallery } from '../../hooks/usePhotoGallery';
+import usePhotoGallery from '../../hooks/usePhotoGallery';
 
 import { updateUserDocument, uploadImage } from '../../services/firebase-service';
 

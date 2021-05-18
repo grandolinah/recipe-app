@@ -5,7 +5,6 @@ import { arrowForwardOutline } from 'ionicons/icons';
 
 import { createUserWithEmailAndPassword, signInWithEmailAndPasswordHandler } from '../../services/firebase-service';
 
-import PageLayout from "../../layouts/PageLayout";
 import Button from '../../components/Button/Button';
 import Header from '../../components/Header/Header';
 
@@ -162,7 +161,7 @@ const Login: React.FC<RouteComponentProps> = () => {
   };
 
   return (
-    <IonPage>
+    <IonPage className="login">
       <Header name="Login" />
       <IonContent className="ion-padding login">
         <IonGrid className="login__grid">

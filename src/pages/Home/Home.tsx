@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { IonText } from "@ionic/react";
-import { RouteComponentProps } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { IonText } from '@ionic/react';
+import { RouteComponentProps } from 'react-router-dom';
 
-import { getAllRecipes } from "../../services/firebase-service";
+import { getAllRecipes } from '../../services/firebase-service';
 
-import PageLayout from "../../layouts/PageLayout";
-import RecipeItem from "../../components/RecipeItem/RecipeItem";
+import PageLayout from '../../layouts/PageLayout';
+import RecipeItem from '../../components/RecipeItem/RecipeItem';
 
 // TODO: get all/or user`s recipes in the database
 

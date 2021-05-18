@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { RouteComponentProps } from "react-router";
+import React, { useState, useContext } from 'react';
+import { RouteComponentProps } from 'react-router';
 import {
   IonItemDivider,
   IonRow,
@@ -11,19 +11,19 @@ import {
   IonList,
   IonItem,
   IonAvatar,
-} from "@ionic/react";
+} from '@ionic/react';
 
-import { usePhotoGallery } from "../../../hooks/usePhotoGallery";
+import usePhotoGallery from '../../../hooks/usePhotoGallery';
 
-import { UserContext } from "../../../context/UserContext";
-import { useNotificationContext } from "../../../context/NotificationContext";
+import { UserContext } from '../../../context/UserContext';
+import { useNotificationContext } from '../../../context/NotificationContext';
 
-import PageLayout from "../../../layouts/PageLayout";
-import Button from "../../../components/Button/Button";
+import PageLayout from '../../../layouts/PageLayout';
+import Button from '../../../components/Button/Button';
 
 import { createRecipe } from '../../../services/firebase-service';
 
-import "./CreateRecipe.scss";
+import './CreateRecipe.scss';
 
 interface Product {
   item: string;
@@ -47,19 +47,19 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
   const { takePhoto } = usePhotoGallery();
   const { setNotification } = useNotificationContext();
   const [photoUrl, setPhotoUrl] = useState<string>(
-    "https://massageatworkusa.com/wp-content/uploads/2020/08/shutterstock_461827699.jpg"
+    'https://massageatworkusa.com/wp-content/uploads/2020/08/shutterstock_461827699.jpg'
   );
-  const [title, setTitle] = useState<string>("");
-  const [titleColor, setTitleColor] = useState<string>("primary");
-  const [description, setDescription] = useState<string>("");
-  const [descriptionColor, setDescriptionColor] = useState<string>("primary");
+  const [title, setTitle] = useState<string>('');
+  const [titleColor, setTitleColor] = useState<string>('primary');
+  const [description, setDescription] = useState<string>('');
+  const [descriptionColor, setDescriptionColor] = useState<string>('primary');
   const [step, setStep] = useState<string>();
-  const [stepColor, setStepColor] = useState<string>("primary");
+  const [stepColor, setStepColor] = useState<string>('primary');
   const [steps, setSteps] = useState<any>([]);
-  const [product, setProduct] = useState<string>("");
-  const [productColor, setProductColor] = useState<string>("primary");
-  const [quantity, setQuantity] = useState<string>("");
-  const [quantityColor, setQuantityColor] = useState<string>("primary");
+  const [product, setProduct] = useState<string>('');
+  const [productColor, setProductColor] = useState<string>('primary');
+  const [quantity, setQuantity] = useState<string>('');
+  const [quantityColor, setQuantityColor] = useState<string>('primary');
   const [products, setProducts] = useState<any[]>([]);
 
   // TODO: clear input after add step or product
@@ -83,32 +83,32 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
   };
 
   const addStep = () => {
-    if (step === "") {
+    if (step === '') {
       setNotification({
-        message: "Your need to fill step",
-        color: "danger",
+        message: 'Your need to fill step',
+        color: 'danger',
       });
     } else {
       setSteps([...steps, step]);
 
-      setStep("");
+      setStep('');
     }
   };
 
   const addProduct = () => {
     const notification = [];
-    if (product === "" && quantity === "") {
-      notification.push("product and quantity");
-    } else if (product === "") {
-      notification.push("product");
-    } else if (quantity === "") {
-      notification.push("quantity");
+    if (product === '' && quantity === '') {
+      notification.push('product and quantity');
+    } else if (product === '') {
+      notification.push('product');
+    } else if (quantity === '') {
+      notification.push('quantity');
     }
 
     if (notification.length > 0) {
       setNotification({
-        message: `Your need to fill ${notification.join(", ")}`,
-        color: "danger",
+        message: `Your need to fill ${notification.join(', ')}`,
+        color: 'danger',
       });
     } else {
       setProducts([
@@ -119,55 +119,55 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
         },
       ]);
 
-      setProduct("");
-      setQuantity("");
+      setProduct('');
+      setQuantity('');
     }
   };
 
   const validateInput = (data: Recipe) => {
     const notification = [];
 
-    if (data.title === "") {
-      setTitleColor("danger");
-      notification.push("title");
+    if (data.title === '') {
+      setTitleColor('danger');
+      notification.push('title');
     } else {
-      setTitleColor("primary");
+      setTitleColor('primary');
     }
 
-    if (data.description === "") {
-      setDescriptionColor("danger");
-      notification.push("description");
+    if (data.description === '') {
+      setDescriptionColor('danger');
+      notification.push('description');
     } else {
-      setDescriptionColor("primary");
+      setDescriptionColor('primary');
     }
 
-    if (data.description === "") {
-      setDescriptionColor("danger");
-      notification.push("description");
+    if (data.description === '') {
+      setDescriptionColor('danger');
+      notification.push('description');
     } else {
-      setDescriptionColor("primary");
+      setDescriptionColor('primary');
     }
 
     if (data.steps.length === 0) {
-      setStepColor("danger");
-      notification.push("steps");
+      setStepColor('danger');
+      notification.push('steps');
     } else {
-      setStepColor("primary");
+      setStepColor('primary');
     }
 
     if (data.products.length === 0) {
-      setProductColor("danger");
-      setQuantityColor("danger");
-      notification.push("products");
+      setProductColor('danger');
+      setQuantityColor('danger');
+      notification.push('products');
     } else {
-      setProductColor("primary");
-      setQuantityColor("primary");
+      setProductColor('primary');
+      setQuantityColor('primary');
     }
 
     if (notification.length > 0) {
       setNotification({
-        message: `Your need to fill ${notification.join(", ")}`,
-        color: "danger",
+        message: `Your need to fill ${notification.join(', ')}`,
+        color: 'danger',
       });
 
       return false;
@@ -178,7 +178,7 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
 
   const addRecipe = () => {
     const newRecipe = {
-      video: "",
+      video: '',
       image: photoUrl,
       title,
       userId: user.uid,

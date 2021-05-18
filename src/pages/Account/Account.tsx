@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from 'react';
 import {
   IonAvatar,
   IonRow,
@@ -9,31 +9,31 @@ import {
   IonSelectOption,
   IonItemDivider,
   IonText,
-} from "@ionic/react";
-import { useHistory } from "react-router-dom";
+} from '@ionic/react';
+import { useHistory } from 'react-router-dom';
 
 import {
   updateUserDocument,
   uploadImage,
   signOutHandler,
-} from "../../services/firebase-service";
+} from '../../services/firebase-service';
 
-import { usePhotoGallery } from "../../hooks/usePhotoGallery";
+import usePhotoGallery from '../../hooks/usePhotoGallery';
 
-import { UserContext } from "../../context/UserContext";
-import { useNotificationContext } from "../../context/NotificationContext";
+import { UserContext } from '../../context/UserContext';
+import { useNotificationContext } from '../../context/NotificationContext';
 
-import PageLayout from "../../layouts/PageLayout";
-import Button from "../../components/Button/Button";
+import PageLayout from '../../layouts/PageLayout';
+import Button from '../../components/Button/Button';
 
-import "./Account.scss";
+import './Account.scss';
 
 const Account: React.FC = () => {
   const user = useContext(UserContext);
   const [photoUrl, setPhotoUrl] = useState<any>(
     user?.photoURL
       ? user.photoURL
-      : "https://firebasestorage.googleapis.com/v0/b/ionic-recipes-6daa6.appspot.com/o/users%2Fdefault-user-image.png?alt=media&token=7963c406-089f-444e-9262-f22b1524fe45"
+      : 'https://firebasestorage.googleapis.com/v0/b/ionic-recipes-6daa6.appspot.com/o/users%2Fdefault-user-image.png?alt=media&token=7963c406-089f-444e-9262-f22b1524fe45'
   );
   const [firstName, setFirstName] = useState<string | null>(user?.firstName);
   const [secondName, setSecondName] = useState<string | null>(user?.secondName);
@@ -75,13 +75,13 @@ const Account: React.FC = () => {
         await updateUserDocument(user, updatedInfo);
 
         setNotification({
-          message: "Changes have been saved.",
-          color: "primary",
+          message: 'Changes have been saved.',
+          color: 'primary',
         });
       } catch (error) {
         setNotification({
-          message: "Changes have not been saved. Please try again.",
-          color: "danger",
+          message: 'Changes have not been saved. Please try again.',
+          color: 'danger',
         });
       }
     }
@@ -91,12 +91,10 @@ const Account: React.FC = () => {
     try {
       // firebase sign out
       signOutHandler();
-
-      history.push("/login"); // TODO: not working
     } catch (error) {
       setNotification({
-        message: "Singout failed. Please try again.",
-        color: "danger",
+        message: 'Singout failed. Please try again.',
+        color: 'danger',
       });
     }
   };
@@ -104,6 +102,18 @@ const Account: React.FC = () => {
   useEffect(() => {
     updateUserDocument(user, { photoURL: photoUrl });
   }, [photoUrl, user]);
+
+
+  useEffect(() => {
+    if (!user) {
+      setNotification({
+        message: 'Singout completed.',
+        color: 'primary',
+      });
+
+      history.push('/');
+    }
+  }, [user]);
 
   return (
     <PageLayout name="My account" className="account">
