@@ -5,7 +5,6 @@ import { arrowForwardOutline } from 'ionicons/icons';
 
 import { createUserWithEmailAndPassword, signInWithEmailAndPasswordHandler } from '../../services/firebase-service';
 
-import PageLayout from '../../layouts/PageLayout'; // TODO: is needed?
 import Button from '../../components/Button/Button';
 import Header from '../../components/Header/Header';
 
