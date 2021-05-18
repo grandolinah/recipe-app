@@ -36,7 +36,7 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.scss';
 
-import './styles/App.scss';
+import './styles/styles.scss';
 
 export interface UserInterface {
   uid: string;
