@@ -91,8 +91,6 @@ const Account: React.FC = () => {
     try {
       // firebase sign out
       signOutHandler();
-
-      history.push('/login'); // TODO: not working
     } catch (error) {
       setNotification({
         message: 'Singout failed. Please try again.',
@@ -104,6 +102,18 @@ const Account: React.FC = () => {
   useEffect(() => {
     updateUserDocument(user, { photoURL: photoUrl });
   }, [photoUrl, user]);
+
+
+  useEffect(() => {
+    if (!user) {
+      setNotification({
+        message: 'Singout completed.',
+        color: 'primary',
+      });
+
+      history.push('/');
+    }
+  }, [user]);
 
   return (
     <PageLayout name="My account" className="account">
