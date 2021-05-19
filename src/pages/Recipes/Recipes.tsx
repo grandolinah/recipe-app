@@ -18,15 +18,58 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
   const user = useContext(UserContext);
   const { setNotification } = useNotificationContext();
 
+  const renderRecipesHelper = () => {
+    if (recipes.length > 0) {
+      return recipes.map((item: any, index: number) => {
+        return (
+          <RecipeItem
+            key={index + 1}
+            title={item.title}
+            products={item.products}
+            image={item.image}
+            video={item.video}
+            author={item.userId}
+            steps={item.steps}
+            description={item.description}
+            onClickHandler={() => {
+              history.push(`/app/home/details/${item.id}`);
+            }}
+            authorable
+            onClickDeleteHandler={() => {
+              deleteRecipe(item.id);
+  
+              setNotification({
+                message: 'You deleted the recipe successfully.',
+                color: 'primary',
+              });
+  
+              setIsLoaded(false);
+            }}
+            onClickEditHandler={() => {
+              history.push({
+                pathname: `/app/recipes/edit/${item.id}`,
+                state: {
+                  recipe: item,
+                },
+              });
+            }}
+          />
+        );
+      });
+    }
+
+    return (
+      <IonText>No recipes</IonText>
+    );
+  };
+
   useEffect(() => {
     const unlisten = async () => {
-      if (!isLoaded) {
-        const allRecipes = await getUserRecipes(user.uid);
+      const allRecipes = await getUserRecipes(user.uid);
 
-        if (allRecipes?.recipes) {
-          setRecipes(allRecipes.recipes);
-          setIsLoaded(true);
-        }
+      if (allRecipes?.recipes) {
+        setRecipes(allRecipes.recipes);
+        setIsLoaded(true);
       }
     };
 
@@ -34,18 +77,6 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
       unlisten();
     };
   });
-
-  useEffect(() => {
-    const unlisten = () => {
-      history.listen((location) => {
-        setIsLoaded(false);
-      });
-    };
-
-    return () => {
-      unlisten();
-    }
-  }, [history]);
 
   return (
     <PageLayout name="Recipes" className="recipes">
@@ -55,49 +86,7 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
           onClickHandler={() => history.push(urls.CREATE_RECIPE)}
         />
       </IonRow>
-
-      {isLoaded ? (
-        recipes ? (
-          recipes.map((item: any, index: number) => {
-            return (
-              <RecipeItem
-                key={index + 1}
-                title={item.title}
-                products={item.products}
-                image={item.image}
-                video={item.video}
-                author={item.userId}
-                steps={item.steps}
-                description={item.description}
-                onClickHandler={() => {
-                  history.push(`/app/home/details/${item.id}`);
-                }}
-                authorable
-                onClickDeleteHandler={() => {
-                  deleteRecipe(item.id);
-
-                  setNotification({
-                    message: 'You deleted the recipe successfully.',
-                    color: 'primary',
-                  });
-
-                  setIsLoaded(false);
-                }}
-                onClickEditHandler={() => {
-                  history.push({
-                    pathname: `/app/recipes/edit/${item.id}`,
-                    state: {
-                      recipe: item,
-                    },
-                  });
-                }}
-              />
-            );
-          })
-        ) : (
-          <IonText>no recipes</IonText>
-        )
-      ) : (
+      {isLoaded ? renderRecipesHelper() : (
         <IonContent className="spinner-wrapper">
           <IonSpinner name="circles" color={"primary"} />
         </IonContent>
