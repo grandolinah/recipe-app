@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import { useNotificationContext } from '../../context/NotificationContext';
 
-import Button from '../../components/Button/Button';
+import Button from '../Button/Button';
 
 import usePhotoGallery from '../../hooks/usePhotoGallery';
 
