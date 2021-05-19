@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { RouteComponentProps } from 'react-router';
+import React, { useState, useContext, useEffect } from 'react';
+import { RouteComponentProps, useLocation } from 'react-router';
 import {
   IonItemDivider,
   IonRow,
@@ -21,9 +21,7 @@ import { useNotificationContext } from '../../../context/NotificationContext';
 import PageLayout from '../../../layouts/PageLayout';
 import Button from '../../../components/Button/Button';
 
-import { createRecipe } from '../../../services/firebase-service';
-
-import './CreateRecipe.scss';
+import { updateRecipe } from '../../../services/firebase-service';
 
 interface Product {
   item: string;
@@ -42,7 +40,11 @@ interface Recipe {
   products: Product[];
 }
 
-const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
+interface StateType {
+  recipe: Recipe,
+}
+
+const EditRecipe: React.FC<RouteComponentProps> = ({ history, match }: RouteComponentProps<{ id?: string}>) => {
   const user = useContext(UserContext);
   const { takePhoto } = usePhotoGallery();
   const { setNotification } = useNotificationContext();
@@ -61,6 +63,8 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
   const [quantity, setQuantity] = useState<string>('');
   const [quantityColor, setQuantityColor] = useState<string>('primary');
   const [products, setProducts] = useState<any[]>([]);
+  const location = useLocation<StateType>();
+  const [isRecipeSet, setIsRecipeSet] = useState<boolean>(false);
 
   // TODO: clear input after add step or product
 
@@ -97,6 +101,7 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
 
   const addProduct = () => {
     const notification = [];
+
     if (product === '' && quantity === '') {
       notification.push('product and quantity');
     } else if (product === '') {
@@ -176,13 +181,13 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
     return true;
   };
 
-  const addRecipe = () => {
+  const editRecipe = () => {
     const newRecipe = {
       video: '',
       image: photoUrl,
       title,
       userId: user.uid,
-      userName : `${user.firstName} ${user.secondName}`,
+      userName: `${user.firstName} ${user.secondName}`,
       description,
       steps,
       products,
@@ -191,16 +196,28 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
     const isInputValidated = validateInput(newRecipe);
 
     if (isInputValidated) {
-      createRecipe(newRecipe);
+      updateRecipe(newRecipe, match.params.id);
 
       // TODO: reset inputs
       history.push('/app/recipes');
     }
   };
 
+  useEffect(() => {
+    if (!isRecipeSet && location.state) {
+      setPhotoUrl(location.state.recipe.image ? location.state.recipe.image : photoUrl);
+      setTitle(location.state.recipe.title ? location.state.recipe.title : title);
+      setDescription(location.state.recipe.description ? location.state.recipe.description : description);
+      setSteps(location.state.recipe.steps ? location.state.recipe.steps : steps);
+      setProducts(location.state.recipe.products ? location.state.recipe.products : products);
+
+      setIsRecipeSet(true);
+    }
+  }, [location, isRecipeSet]);
+
   return (
-    <PageLayout name="New recipe" backButton className="create-recipe">
-      <IonRow className="create-recipe__info">
+    <PageLayout name="Edit recipe" backButton className="edit-recipe">
+      <IonRow className="edit-recipe__info">
         <IonText>
           Add new recipe here, all you need to add is steps, products and some
           extra info..
@@ -218,10 +235,9 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
           </IonCol>
         </IonRow>
       </IonItemDivider>
-
       <IonItemDivider>
         <IonRow>
-          <IonItem className="create-recipe__input">
+          <IonItem className="edit-recipe__input">
             <IonLabel position="floating" color={titleColor}>
               title
             </IonLabel>
@@ -234,23 +250,21 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
           </IonItem>
         </IonRow>
       </IonItemDivider>
-
       <IonItemDivider>
         <IonRow>
-          <IonItem className="create-recipe__input">
+          <IonItem className="edit-recipe__input">
             <IonLabel position="floating" color={descriptionColor}>
               description
             </IonLabel>
             <IonTextarea
-              className="create-recipe__description"
+              className="edit-recipe__description"
               value={description}
               onIonChange={(e) => setDescription(e.detail.value!)}
             ></IonTextarea>
           </IonItem>
         </IonRow>
       </IonItemDivider>
-
-      <IonRow className="create-recipe__info">
+      <IonRow className="edit-recipe__info">
         <IonText>
           Help your followers with step by step recipe, add steps bellow:
         </IonText>
@@ -270,7 +284,7 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
       <IonItemDivider>
         <IonRow>
           <IonCol size="8">
-            <IonItem className="create-recipe__input">
+            <IonItem className="edit-recipe__input">
               <IonLabel position="floating" color={stepColor}>
                 step
               </IonLabel>
@@ -287,8 +301,7 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
           </IonCol>
         </IonRow>
       </IonItemDivider>
-
-      <IonRow className="create-recipe__info">
+      <IonRow className="edit-recipe__info">
         <IonText>Now its time to make a list with the products:</IonText>
       </IonRow>
       <IonRow>
@@ -306,12 +319,11 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
           ))}
         </IonList>
       </IonRow>
-
       <IonRow>
         <IonItemDivider>
           <IonRow>
             <IonCol size="8">
-              <IonItem className="create-recipe__input">
+              <IonItem className="edit-recipe__input">
                 <IonLabel position="floating" color={productColor}>
                   product
                 </IonLabel>
@@ -324,7 +336,7 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
               </IonItem>
             </IonCol>
             <IonCol size="4">
-              <IonItem className="create-recipe__input">
+              <IonItem className="edit-recipe__input">
                 <IonLabel position="floating" color={quantityColor}>
                   qty
                 </IonLabel>
@@ -339,11 +351,11 @@ const CreateRecipe: React.FC<RouteComponentProps> = ({ match, history }) => {
           <Button name="add" onClickHandler={addProduct} />
         </IonItemDivider>
       </IonRow>
-      <IonRow className="create-recipe__create-button">
-        <Button name="Add recipe" onClickHandler={addRecipe} />
+      <IonRow className="edit-recipe__create-button">
+        <Button name="Save" onClickHandler={editRecipe} />
       </IonRow>
     </PageLayout>
   );
 };
 
-export default CreateRecipe;
+export default EditRecipe;

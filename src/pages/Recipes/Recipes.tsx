@@ -1,17 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { IonRow, IonText, IonSpinner, IonContent } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
-// import { v4 as uuid } from 'uuid';
 
 import { getUserRecipes, deleteRecipe } from '../../services/firebase-service';
-
+import urls from '../../config/urls';
 import { UserContext } from '../../context/UserContext';
-
 import Button from '../../components/Button/Button';
 import PageLayout from '../../layouts/PageLayout';
 import RecipeItem from '../../components/RecipeItem/RecipeItem';
-
-// TODO: get all/or user`s recipes in the database
 import { useNotificationContext } from '../../context/NotificationContext';
 
 import './Recipes.scss';
@@ -39,18 +35,24 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
     };
   });
 
-  useEffect( () => {
-    return history.listen((location) => { 
-      setIsLoaded(false);
-    }) 
- },[history]) 
+  useEffect(() => {
+    const unlisten = () => {
+      history.listen((location) => {
+        setIsLoaded(false);
+      });
+    };
+
+    return () => {
+      unlisten();
+    }
+  }, [history]);
 
   return (
     <PageLayout name="Recipes" className="recipes">
       <IonRow className="recipes__button-container">
         <Button
           name="Create new recipe"
-          onClickHandler={() => history.push("/app/recipes/create")}
+          onClickHandler={() => history.push(urls.CREATE_RECIPE)}
         />
       </IonRow>
 
@@ -59,7 +61,6 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
           recipes.map((item: any, index: number) => {
             return (
               <RecipeItem
-                // key={uuid()}
                 key={index + 1}
                 title={item.title}
                 products={item.products}
@@ -73,7 +74,6 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
                 }}
                 authorable
                 onClickDeleteHandler={() => {
-                  // TODO: add confirm modal
                   deleteRecipe(item.id);
 
                   setNotification({
@@ -84,7 +84,12 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
                   setIsLoaded(false);
                 }}
                 onClickEditHandler={() => {
-                  // todo edit
+                  history.push({
+                    pathname: `/app/recipes/edit/${item.id}`,
+                    state: {
+                      recipe: item,
+                    },
+                  });
                 }}
               />
             );
