@@ -1,13 +1,9 @@
-import { IonButton, IonIcon } from '@ionic/react';
 import React from 'react';
+import { IonButton, IonIcon } from '@ionic/react';
+
+import { ButtonProps } from '../../interfaces/button-interface';
 
 import './Button.scss';
-
-export type ButtonProps = {
-  name: string;
-  onClickHandler(): void;
-  icon?: string;
-}
 
 const Button = ({ onClickHandler, name, icon }: ButtonProps) => {
   return (

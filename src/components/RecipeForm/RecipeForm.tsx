@@ -13,11 +13,12 @@ import {
 } from '@ionic/react';
 import { useLocation } from 'react-router';
 
-import {Product, Recipe } from '../../interfaces/recipe-interface';
+import { Product, Recipe } from '../../interfaces/recipe-interface';
 import usePhotoGallery from '../../hooks/usePhotoGallery';
 import { UserContext } from '../../context/UserContext';
 import { useNotificationContext } from '../../context/NotificationContext';
 import Button from '../../components/Button/Button';
+import { RecipeFormProps, StateType } from '../../interfaces/recipe-form-interface';
 
 import './RecipeForm.scss';
 
@@ -36,18 +37,6 @@ const DEFAULT_STATE = {
   steps: [],
   products: [],
 };
-
-interface RecipeFormProps  {
-  recipeIntro: string;
-  stepDescription: string;
-  productsDescription: string;
-  actionButtonTitle: string;
-  onPressActionButton(arg0: Recipe):  void;
-}
-
-interface StateType {
-  recipe: Recipe,
-}
 
 const RecipeForm: React.FC<RecipeFormProps> = ({
   recipeIntro,

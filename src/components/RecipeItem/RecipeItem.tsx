@@ -11,33 +11,18 @@ import {
 } from '@ionic/react';
 import { trash, create, close } from 'ionicons/icons';
 
-export type RecipeItem = {
-  title: string;
-  products: any; // TODO: array with obj?
-  image?: string;
-  video?: string;
-  author: string;
-  steps: any; // TODO: array with strings?
-  description: string;
-  onClickHandler(): void;
-  authorable?: boolean;
-  onClickEditHandler?(): void;
-  onClickDeleteHandler?(): void;
-}
+import { RecipeItemProps } from '../../interfaces/recipe-item-interface';
 
 const RecipeItem = ({
   title,
   image,
-  products,
-  video,
   author,
-  steps,
   description,
   onClickHandler,
   onClickEditHandler,
   onClickDeleteHandler,
   authorable,
-}: RecipeItem) => {
+}: RecipeItemProps) => {
   const [showActionSheet, setShowActionSheet] = useState<boolean>(false);
 
   const descriptionHelper = () => {

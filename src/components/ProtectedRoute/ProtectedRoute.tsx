@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { Route, Redirect } from 'react-router';
+import url from '../../config/urls';
 
 export type ProtectedRouteProps = {
   component: React.ComponentType<any>;
@@ -14,7 +15,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ component: Component, p
   }, [Component, path, isAuth]);
 
   return (
-    <Route path={path} render={() => isAuth ? <Component /> : <Redirect to="/login" />} />
+    <Route path={path} render={() => isAuth ? <Component /> : <Redirect to={url.LOGIN} />} />
   );
 };
 

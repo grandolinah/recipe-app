@@ -1,3 +1,8 @@
+export interface Product {
+  item: string;
+  quantity: string;
+}
+
 export interface Recipe {
   id?: string;
   video?: string;
@@ -8,9 +13,4 @@ export interface Recipe {
   description: string;
   steps: string[];
   products: Product[];
-}
-
-export interface Product {
-  item: string;
-  quantity: string;
 }
