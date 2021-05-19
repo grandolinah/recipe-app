@@ -4,8 +4,9 @@ export interface RecipeItemProps {
   video?: string;
   author: string;
   description: string;
-  onClickHandler(): void;
   authorable?: boolean;
+  onClickFavoriteHandler?(): void;
+  onClickDetailsHandler?(): void;
   onClickEditHandler?(): void;
   onClickDeleteHandler?(): void;
 }

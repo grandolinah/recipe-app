@@ -25,15 +25,10 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
           <RecipeItem
             key={index + 1}
             title={item.title}
-            products={item.products}
             image={item.image}
             video={item.video}
             author={item.userId}
-            steps={item.steps}
             description={item.description}
-            onClickHandler={() => {
-              history.push(`/app/home/details/${item.id}`);
-            }}
             authorable
             onClickDeleteHandler={() => {
               deleteRecipe(item.id);
@@ -56,7 +51,7 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
           />
         );
       });
-    }
+    };
 
     return (
       <IonText>No recipes</IonText>

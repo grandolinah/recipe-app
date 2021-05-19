@@ -18,7 +18,8 @@ const RecipeItem = ({
   image,
   author,
   description,
-  onClickHandler,
+  onClickDetailsHandler,
+  onClickFavoriteHandler,
   onClickEditHandler,
   onClickDeleteHandler,
   authorable,
@@ -44,15 +45,26 @@ const RecipeItem = ({
       <IonCardContent>
         {descriptionHelper()}
         {!authorable && (
-          <IonButton
-            size="small"
-            expand="full"
-            onClick={() => {
-              onClickHandler();
-            }}
-          >
-            Details
-          </IonButton>
+          <>
+            <IonButton
+              size="small"
+              expand="full"
+              onClick={() => {
+                onClickDetailsHandler && onClickDetailsHandler();
+              }}
+            >
+              Details
+            </IonButton>
+            <IonButton
+              size="small"
+              expand="full"
+              onClick={() => {
+                onClickFavoriteHandler && onClickFavoriteHandler();
+              }}
+            >
+              Add to favorites
+            </IonButton>
+          </>
         )}
 
         {authorable && (
