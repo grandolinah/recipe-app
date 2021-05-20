@@ -60,11 +60,13 @@ const Recipes: React.FC<RouteComponentProps> = ({ history }) => {
 
   useEffect(() => {
     const unlisten = async () => {
-      const allRecipes = await getUserRecipes(user.uid);
+      if (user) {
+        const allRecipes = await getUserRecipes(user.uid);
 
-      if (allRecipes?.recipes) {
-        setRecipes(allRecipes.recipes);
-        setIsLoaded(true);
+        if (allRecipes?.recipes) {
+          setRecipes(allRecipes.recipes);
+          setIsLoaded(true);
+        }
       }
     };
 
