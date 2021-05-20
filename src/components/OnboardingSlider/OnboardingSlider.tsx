@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import { useNotificationContext } from '../../context/NotificationContext';
 
-import Button from '../../components/Button/Button';
+import Button from '../Button/Button';
 
 import usePhotoGallery from '../../hooks/usePhotoGallery';
 
@@ -17,7 +17,7 @@ import urls from '../../config/urls';
 
 let swiper: any;
 
-const slideOpts = {
+const slideOptions = {
   initialSlide: 0,
   speed: 400,
   allowTouchMove: false,
@@ -37,7 +37,7 @@ const OnboardingSlider = () => {
   const user = useContext(UserContext);
   const [photoUrl, setPhotoUrl] = useState<any>(user?.photoURL ? user.photoURL
     : 'https://firebasestorage.googleapis.com/v0/b/ionic-recipes-6daa6.appspot.com/o/users%2Fdefault-user-image.png?alt=media&token=7963c406-089f-444e-9262-f22b1524fe45');
-  const { notification, setNotification } = useNotificationContext();
+  const { setNotification } = useNotificationContext();
   const { takePhoto } = usePhotoGallery();
 
   const onClickFirstNameHandler = async () => {
@@ -100,7 +100,7 @@ const OnboardingSlider = () => {
 
   return (
     <IonContent>
-      <IonSlides pager={true} options={slideOpts} className="slider">
+      <IonSlides pager={true} options={slideOptions} className="slider">
         <IonSlide className="slider__slide">
           <IonGrid>
             <IonRow className="slider__description">

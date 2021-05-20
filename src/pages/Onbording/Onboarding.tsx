@@ -1,7 +1,7 @@
 import React from 'react';
 import { IonPage} from '@ionic/react';
 
-import OnboardingSlider from '../../containers/OnboardingSlider/OnboardingSlider';
+import OnboardingSlider from '../../components/OnboardingSlider/OnboardingSlider';
 import Header from '../../components/Header/Header';
 
 const Onboarding = () => {

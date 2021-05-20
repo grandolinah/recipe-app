@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 // import 'firebase/database'; realtime db
+import { v4 as uuid } from 'uuid';
 
 import 'firebase/auth';
 import 'firebase/firestore';
@@ -27,6 +28,7 @@ export const storage = firebase.storage();
 // realtime db
 // export const db = firebase.database();
 
+// get user document from 'user' collection
 export const getUserDocument = async (uid: string) => {
   if (!uid) return null;
 
@@ -42,6 +44,7 @@ export const getUserDocument = async (uid: string) => {
   }
 };
 
+// create user document in 'user' collection
 export const generateUserDocument = async (user: any) => {
   if (!user) return;
 
@@ -70,6 +73,7 @@ export const generateUserDocument = async (user: any) => {
   return getUserDocument(user.uid);
 };
 
+// update user document in 'user' collection
 export const updateUserDocument = async (user: any, additionalInfo: any) => {
   if (!user) return;
 
@@ -150,21 +154,13 @@ export const signOutHandler = () => {
     });
 };
 
-// delete user
-export const uploadImage = async (file: any, currentUserId: string) => {
-  const storageRef = storage
-    .ref('users')
-    .child(`${new Date().getTime()}-${currentUserId}.jpeg`);
-
-  const uploadTask = storageRef.putString(file, 'data_url', {
-    contentType: 'image/jpeg',
-  });
-
+// upload file in firebase/storage
+const uploadTaskHelper = (task: any) => {
   return new Promise((resolve, reject) => {
     //  Listen for state changes, errors, and completion of the upload.
-    uploadTask.on(
+    task.on(
       firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
-      function (snapshot) {
+      function (snapshot: { bytesTransferred: number; totalBytes: number; state: any; }) {
         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -180,7 +176,7 @@ export const uploadImage = async (file: any, currentUserId: string) => {
             break;
         }
       },
-      function (error) {
+      function (error: { code: any; }) {
         //A full list of error codes is available at
         // https://firebase.google.com/docs/storage/web/handle-errors
         switch (error.code) {
@@ -199,7 +195,7 @@ export const uploadImage = async (file: any, currentUserId: string) => {
       },
       function () {
         // Upload completed successfully, now we can get the download URL
-        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+        task.snapshot.ref.getDownloadURL().then((downloadURL: unknown) => {
           console.log('File available at', downloadURL);
 
           resolve(downloadURL);
@@ -209,7 +205,20 @@ export const uploadImage = async (file: any, currentUserId: string) => {
   });
 };
 
-// Recipes
+// upload image in user document
+export const uploadImage = async (file: any, currentUserId: string) => {
+  const storageRef = storage
+    .ref('users')
+    .child(`${new Date().getTime()}-${currentUserId}.jpeg`);
+
+  const uploadTask = storageRef.putString(file, 'data_url', {
+    contentType: 'image/jpeg',
+  });
+
+  uploadTaskHelper(uploadTask);
+};
+
+// get all recipes
 export const getAllRecipes = async () => {
   try {
     const recipes: {
@@ -252,7 +261,7 @@ export const getAllRecipes = async () => {
   }
 };
 
-// Recipe by id
+// get recipe by id
 export const getRecipe = async (id: string) => {
   let recipe = null;
 
@@ -287,7 +296,7 @@ export const getRecipe = async (id: string) => {
   }
 };
 
-// user`s recipes
+// user`s recipes by user id
 export const getUserRecipes = async (userId: string) => {
   const recipes: {
     id: string;
@@ -333,8 +342,45 @@ export const getUserRecipes = async (userId: string) => {
 
 // create recipe
 export const createRecipe = async (recipe: any) => {
-  const recipeRef = firestore.doc(`recipes/${recipe.userId}-${recipe.title}`);
+  const recipeId = `${recipe.userId}-${uuid()}`;
+  const recipeRef = firestore.doc(`recipes/${recipeId}`);
 
+  const { video, image, title, userId, description, steps, products, userName } = recipe;
+
+  try {
+    await recipeRef.set({
+      video,
+      image,
+      title,
+      userId,
+      description,
+      steps,
+      products,
+      userName,
+      recipeId,
+    });
+
+    const videoOrImage = recipe.image || recipe.video;
+    // TODO: only if not default upload**
+
+    if (videoOrImage !== 'https://massageatworkusa.com/wp-content/uploads/2020/08/shutterstock_461827699.jpg') {
+      const storageRef = storage
+        .ref('recipe')
+        .child(`${new Date().getTime()}-${recipeId}.jpeg`);
+
+      const uploadTask = storageRef.putString(videoOrImage, 'data_url', {
+        contentType: 'image/jpeg',
+      });
+
+      uploadTaskHelper(uploadTask);
+    }
+  } catch (error) {
+    console.error('Error creating user document', error);
+  }
+};
+
+export const updateRecipe = async (recipe: any, recipeId: string | undefined) => {
+  const recipeRef = firestore.doc(`recipes/${recipeId}`);
   const { video, image, title, userId, description, steps, products, userName} = recipe;
 
   try {
@@ -347,15 +393,12 @@ export const createRecipe = async (recipe: any) => {
       steps,
       products,
       userName,
-    });
+    }, { merge: true });
 
     const videoOrImage = recipe.image || recipe.video;
     // TODO: only if not default upload**
 
-    if (
-      videoOrImage !==
-      'https://massageatworkusa.com/wp-content/uploads/2020/08/shutterstock_461827699.jpg'
-    ) {
+    if (videoOrImage !== 'https://massageatworkusa.com/wp-content/uploads/2020/08/shutterstock_461827699.jpg') {
       const storageRef = storage
         .ref('recipe')
         .child(`${new Date().getTime()}-${recipe.userId}.jpeg`);
@@ -364,53 +407,7 @@ export const createRecipe = async (recipe: any) => {
         contentType: 'image/jpeg',
       });
 
-      return new Promise((resolve, reject) => {
-        //  Listen for state changes, errors, and completion of the upload.
-        uploadTask.on(
-          firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
-          function (snapshot) {
-            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-
-            console.log('Upload is ' + progress + '% done');
-
-            switch (snapshot.state) {
-              case firebase.storage.TaskState.PAUSED: //or 'paused'
-                console.log('Upload is paused');
-                break;
-              case firebase.storage.TaskState.RUNNING: // or 'running'
-                console.log('Upload is running');
-                break;
-            }
-          },
-          function (error) {
-            //A full list of error codes is available at
-            // https://firebase.google.com/docs/storage/web/handle-errors
-            switch (error.code) {
-              case 'storage/unauthorized':
-                // User doesn't have permission to access the object
-                break;
-
-              case 'storage/canceled':
-                // User canceled the upload
-                break;
-
-              case 'storage/unknown':
-                // Unknown error occurred, inspect error.serverResponse
-                break;
-            }
-          },
-          function () {
-            // Upload completed successfully, now we can get the download URL
-            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-              console.log('File available at', downloadURL);
-
-              resolve(downloadURL);
-            });
-          }
-        );
-      });
+      uploadTaskHelper(uploadTask);
     }
   } catch (error) {
     console.error('Error creating user document', error);

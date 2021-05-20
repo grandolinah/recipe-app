@@ -1,12 +1,9 @@
-import React from "react";
-import { IonToolbar, IonTitle, IonButtons, IonBackButton } from "@ionic/react";
+import React from 'react';
+import { IonToolbar, IonTitle, IonButtons, IonBackButton } from '@ionic/react';
 
-import "./Header.scss";
+import { HeaderProps } from '../../interfaces/header-interface';
 
-export type HeaderProps = {
-  name: string;
-  backButton?: boolean;
-};
+import './Header.scss';
 
 const Header = ({ name, backButton }: HeaderProps) => {
   return (
